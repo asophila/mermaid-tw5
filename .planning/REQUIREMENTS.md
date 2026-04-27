@@ -28,11 +28,11 @@ Requirements for this maintenance and improvement milestone.
 
 ### Automation
 
-- [ ] **AUTO-01**: Set up CI/CD pipeline for build verification and GitHub Pages deployment
+- [x] **AUTO-01**: Set up CI/CD pipeline for build verification and GitHub Pages deployment — Completed in Phase 5
 
 ### Documentation
 
-- [ ] **DOCS-02**: Add developer setup instructions and contribution guidelines
+- [x] **DOCS-02**: Add developer setup instructions and contribution guidelines — Completed in Phase 5
 
 ## v2 Requirements
 
@@ -72,8 +72,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | QUAL-02 | Phase 2 | Pending |
 | PERF-01 | Phase 3 | Pending |
 | UPDT-01 | Phase 4 | Deferred |
-| AUTO-01 | Phase 5 | Pending |
-| DOCS-02 | Phase 5 | Pending |
+| AUTO-01 | Phase 5 | Complete |
+| DOCS-02 | Phase 5 | Complete |
 
 **Coverage:**
 - v1 requirements: 8 total
