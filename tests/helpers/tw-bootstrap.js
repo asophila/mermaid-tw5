@@ -98,6 +98,7 @@ var mockD3 = {
 // ---------------------------------------------------------------------------
 
 var moduleCache = {};
+var requireCalls = [];
 
 var pathMap = {
     '$:/plugins/orange/mermaid-tw5/widget-tools.js': 'mermaid-tw5/plugins/mermaid-tw5/$__plugins_mermaid-tw5_widget-tools.js',
@@ -106,6 +107,7 @@ var pathMap = {
 };
 
 function twRequire(moduleName) {
+    requireCalls.push(moduleName);
     if (moduleCache[moduleName]) {
         return moduleCache[moduleName];
     }
@@ -163,9 +165,30 @@ function loadModule(moduleName) {
     return twRequire(moduleName);
 }
 
+function getRequireCalls() {
+    return requireCalls.slice();
+}
+
+function clearRequireCalls() {
+    requireCalls.length = 0;
+}
+
+function clearModuleCache(moduleName) {
+    if (moduleName) {
+        delete moduleCache[moduleName];
+    } else {
+        for (var key in moduleCache) {
+            delete moduleCache[key];
+        }
+    }
+}
+
 module.exports = {
     loadModule: loadModule,
     twRequire: twRequire,
     MockWidget: MockWidget,
-    mockMermaidAPI: mockMermaidAPI
+    mockMermaidAPI: mockMermaidAPI,
+    getRequireCalls: getRequireCalls,
+    clearRequireCalls: clearRequireCalls,
+    clearModuleCache: clearModuleCache
 };

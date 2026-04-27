@@ -14,12 +14,8 @@ modified: E Furlan 2022-05-08
         Rocklib = require('$:/plugins/orange/mermaid-tw5/widget-tools.js').rocklib,
         Widget = require('$:/core/modules/widgets/widget.js').widget,
         rocklib = new Rocklib(),
-        mermaidAPI = require('$:/plugins/orange/mermaid-tw5/mermaid.min.js')
-        .mermaidAPI;
-
-        // Add D3 library to support pan and zoom
-        // by fkmiec 2023-05-21
-        var d3 = require('$:/plugins/orange/mermaid-tw5/d3.v6.min.js');
+        mermaidAPI = null,
+        d3 = null;
 
     function escapeHtml(text) {
         if (text === null || text === undefined) {
@@ -74,6 +70,14 @@ modified: E Furlan 2022-05-08
                 }
             };
         try {
+            // Lazy-load mermaid and D3 on first render
+            // Libraries are only loaded when a diagram is actually rendered
+            if (!mermaidAPI) {
+                divNode.innerHTML = '<div style="border-left:3px solid #999;background:#f5f5f5;padding:8px 12px;">Loading diagram…</div>';
+                mermaidAPI = require('$:/plugins/orange/mermaid-tw5/mermaid.min.js').mermaidAPI;
+                d3 = require('$:/plugins/orange/mermaid-tw5/d3.v6.min.js');
+            }
+
             var options = {
                 theme: ''
             };
