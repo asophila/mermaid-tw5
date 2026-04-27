@@ -20,19 +20,19 @@ TiddlyWiki users can create and view rich Mermaid diagrams natively within their
 - ✓ **CONFIG-01**: Configurable diagram options via tiddler fields and widget attributes — existing
 - ✓ **ERROR-01**: Basic rendering error catching and display — existing
 - ✓ **DOCS-01**: Plugin readme, usage instructions, and example tiddlers — existing
-- ✓ **QUAL-01**: Improve error handling with user-friendly messages instead of raw exceptions — validated in Phase 2
-- ✓ **QUAL-02**: Add automated test suite for widget rendering and parser behavior — validated in Phase 2
+- ✓ **QUAL-01**: Improve error handling with user-friendly messages instead of raw exceptions — validated in Phase 2, v0.5.0
+- ✓ **QUAL-02**: Add automated test suite for widget rendering and parser behavior — validated in Phase 2, v0.5.0
 - ✓ **DIST-01**: Pre-built TiddlyWiki demo hosted on GitHub Pages — existing
+- ✓ **CLEAN-01**: Remove debug `console.log` statements from production code — validated in Phase 1, v0.5.0
+- ✓ **CLEAN-02**: Remove commented-out dead code — validated in Phase 1, v0.5.0
+- ✓ **STYLE-01**: Establish and apply consistent JavaScript coding style — validated in Phase 1, v0.5.0
+- ✓ **PERF-01**: Lazy loading of mermaid.js and D3.js — validated in Phase 3, v0.5.0
+- ✓ **AUTO-01**: CI/CD pipeline for build verification and GitHub Pages deployment — validated in Phase 5, v0.5.0
+- ✓ **DOCS-02**: Developer setup and contribution guidelines — validated in Phase 5, v0.5.0
 
 ### Active
 
-- [ ] **UPDT-01**: Evaluate and adopt a modern Mermaid.js version (or lite build) that controls bundle size
-- [ ] **CLEAN-01**: Remove debug `console.log` statements from production code
-- [ ] **CLEAN-02**: Remove commented-out dead code (Node.js/browser detection)
-- [ ] **PERF-01**: Investigate lazy loading of mermaid.js and D3.js to reduce initial load
-- [ ] **DOCS-02**: Add developer setup and contribution guidelines
-- [ ] **AUTO-01**: Set up CI/CD for automated build verification and GitHub Pages deployment
-- [ ] **STYLE-01**: Establish and apply consistent JavaScript coding style
+- [ ] **UPDT-01**: Evaluate and adopt a modern Mermaid.js version (or lite build) that controls bundle size — deferred in Phase 4, v0.5.0; tracking upstream
 
 ### Out of Scope
 
@@ -50,6 +50,7 @@ TiddlyWiki users can create and view rich Mermaid diagrams natively within their
 - **Upstream tracking**: Waiting on mermaid-js/mermaid#4616 (lite version request)
 - **Maintenance model**: Single maintainer (E Furlan), infrequent updates, no automated dependency updates
 - **Fragile areas**: WikiText un-parsing (`getScriptBody`) described by original author as "twitchy difficult to maintain and buggy"
+- **Current state (v0.5.0)**: 13 tests passing, lazy loading active, GitHub Actions CI/CD live, developer docs complete
 
 ## Constraints
 
@@ -86,4 +87,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-27 after Phase 2 completion*
+*Last updated: 2026-04-27 after v0.5.0 milestone completion*
