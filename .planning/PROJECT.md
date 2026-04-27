@@ -62,11 +62,11 @@ TiddlyWiki users can create and view rich Mermaid diagrams natively within their
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Stay on Mermaid 9.3.0 | Mermaid 10.x is 3.2 MB minified, considered too large | ⚠️ Revisit — missing security patches and new diagram types |
+| Stay on Mermaid 9.3.0 | Measured v10.9.0=3.34 MB, v11.14.0=3.16 MB, tiny=2.12 MB; all exceed 1.5 MB deferral threshold. No lite build available upstream (#4616). Promise-based API migration is feasible (~15–25 lines) but size alone blocks adoption. | ⚠️ Deferred — Revisit when upstream lite build <1.2 MB or Mermaid provides modular UMD bundles. Tracked: mermaid-js/mermaid#4616 |
 | `securityLevel: 'loose'` | Required for clickable diagram interactions within TiddlyWiki | ✓ Good — documented trade-off for personal notebooks |
 | Inline rocklib (v0.3.5) | Remove external dependency on `$:/plugins/orange/mermaid-tw5/widget-tools.js` | ✓ Good — reduced fragility from external plugin dependency |
 | D3 zoom via click toggle | Enables pan/zoom without complex UI chrome | ⚠️ Revisit — unconventional UX pattern |
-| Lazy loading of mermaid.js and D3.js | Defer library loading until first diagram render; pages without diagrams save ~1.17 MB | ✓ Good — reduces initial load for non-diagram pages |
+| Lazy loading of mermaid.js and D3.js | Defer library loading until first diagram render; pages without diagrams save ~1.17 MB. Phase 4 confirmed modern Mermaid is 2.1–3.3 MB, making lazy loading even more critical for controlling perceived load. | ✓ Good — reduces initial load for non-diagram pages |
 
 ## Evolution
 

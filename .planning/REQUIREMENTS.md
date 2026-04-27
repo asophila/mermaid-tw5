@@ -24,7 +24,7 @@ Requirements for this maintenance and improvement milestone.
 
 ### Dependencies
 
-- [ ] **UPDT-01**: Evaluate modern Mermaid.js versions (or lite builds) and adopt if bundle size is acceptable
+- [x] **UPDT-01**: Evaluate modern Mermaid.js versions (or lite builds) and adopt if bundle size is acceptable — Evaluated in Phase 4; deferred. All modern versions (10.9.0, 11.14.0, tiny) exceed size threshold.
 
 ### Automation
 
@@ -71,7 +71,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | QUAL-01 | Phase 2 | Pending |
 | QUAL-02 | Phase 2 | Pending |
 | PERF-01 | Phase 3 | Pending |
-| UPDT-01 | Phase 4 | Pending |
+| UPDT-01 | Phase 4 | Deferred |
 | AUTO-01 | Phase 5 | Pending |
 | DOCS-02 | Phase 5 | Pending |
 

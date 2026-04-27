@@ -11,7 +11,7 @@
 | 1 | Cleanup & Polish | 2/2 | Complete    | 2026-04-27 |
 | 2 | Reliability & Testing | Improve user-facing reliability and add automated tests | QUAL-01, QUAL-02 | Complete    | 2026-04-27 |
 | 3 | Performance Optimization | Reduce initial load impact of bundled libraries | PERF-01 | 2 |
-| 4 | Dependency Modernization | Evaluate and adopt modern Mermaid.js within size constraints | UPDT-01 | 2 |
+| 4 | Dependency Modernization | Evaluate and adopt modern Mermaid.js within size constraints | UPDT-01 | Complete | 2026-04-27 |
 | 5 | Developer Experience | Automate builds and improve project documentation | AUTO-01, DOCS-02 | 2 |
 
 ---
@@ -71,11 +71,11 @@
 **Requirements:** UPDT-01
 
 **Success Criteria:**
-1. Modern Mermaid.js versions (10.x+) are evaluated for size and compatibility
-2. Lite build or modular import strategy is investigated
-3. Decision is documented in PROJECT.md Key Decisions
-4. If adopted, all existing diagram examples render correctly
-5. If deferred, rationale is documented with upstream tracking reference
+1. ✓ Modern Mermaid.js versions (10.x+) are evaluated for size and compatibility
+2. ✓ Lite build or modular import strategy is investigated
+3. ✓ Decision is documented in PROJECT.md Key Decisions
+4. N/A — adoption criteria not met (size >1.5 MB)
+5. ✓ Rationale documented with upstream tracking reference (mermaid-js/mermaid#4616)
 
 **UI hint:** no
 
