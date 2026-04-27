@@ -2,30 +2,30 @@
 gsd_state_version: 1.0
 milestone: v0.5.0
 milestone_name: milestone
-current_phase: 3
-status: completed
-last_updated: "2026-04-27T14:05:00.000Z"
+current_phase: 4
+status: in_progress
+last_updated: "2026-04-27T23:28:00.000Z"
 progress:
   total_phases: 5
-  completed_phases: 2
+  completed_phases: 3
   total_plans: 4
   completed_plans: 4
-  percent: 100
+  percent: 60
 ---
 
 # State: mermaid-tw5
 
 **Project:** mermaid-tw5
-**Current Phase:** 3
-**Current Milestone:** Milestone 1 (v0.4.0)
-**Status:** Ready to plan
+**Current Phase:** 4
+**Current Milestone:** Milestone 2 (v0.5.0)
+**Status:** Context gathered — ready to plan
 
 ## Project Reference
 
 See: `.planning/PROJECT.md` (updated 2026-04-26)
 
 **Core value:** TiddlyWiki users can create and view rich Mermaid diagrams natively within their notebooks without leaving the wiki environment.
-**Current focus:** Phase 3 — performance-optimization
+**Current focus:** Phase 4 — dependency-modernization
 
 ## Phase Tracker
 
@@ -46,6 +46,7 @@ See: `.planning/PROJECT.md` (updated 2026-04-26)
 - 2026-04-27: Phase 2 executed — error handling improvements and test suite (10 tests passing)
 - 2026-04-27: Phase 3 context gathered via `/gsd-discuss-phase 3 --chain`
 - 2026-04-27: Phase 3 executed — lazy loading of mermaid.js and D3.js (13 tests passing)
+- 2026-04-27: Phase 4 context gathered via `/gsd-discuss-phase 4 --chain`
 
 ## Blockers
 
@@ -56,3 +57,4 @@ None.
 - Brownfield project with existing codebase map in `.planning/codebase/`
 - Single-maintainer project; automation (Phase 5) will reduce manual toil
 - Bundle size is the primary constraint for dependency updates
+- Modern Mermaid 11.x may be smaller (~624 KB) than current 9.3.0 (~899 KB) per Bundlephobia
