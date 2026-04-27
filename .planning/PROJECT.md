@@ -66,6 +66,7 @@ TiddlyWiki users can create and view rich Mermaid diagrams natively within their
 | `securityLevel: 'loose'` | Required for clickable diagram interactions within TiddlyWiki | ✓ Good — documented trade-off for personal notebooks |
 | Inline rocklib (v0.3.5) | Remove external dependency on `$:/plugins/orange/mermaid-tw5/widget-tools.js` | ✓ Good — reduced fragility from external plugin dependency |
 | D3 zoom via click toggle | Enables pan/zoom without complex UI chrome | ⚠️ Revisit — unconventional UX pattern |
+| Lazy loading of mermaid.js and D3.js | Defer library loading until first diagram render; pages without diagrams save ~1.17 MB | ✓ Good — reduces initial load for non-diagram pages |
 
 ## Evolution
 
