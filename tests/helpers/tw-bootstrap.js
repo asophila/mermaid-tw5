@@ -25,7 +25,9 @@ global.$tw = {
 // Widget base class mock
 // ---------------------------------------------------------------------------
 
-function MockWidget() {}
+function MockWidget(parseTreeNode, options) {
+    this.initialise(parseTreeNode, options);
+}
 
 MockWidget.prototype.initialise = function(parseTreeNode, options) {
     this.parseTreeNode = parseTreeNode || {};
