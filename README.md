@@ -2,23 +2,28 @@
 
 *Last edited: 2026-04-27*
 
-The mermaid-tw5 plugin is a wrapper for Mermaid (<https://mermaid.js.org>).
+A TiddlyWiki 5 plugin that embeds [Mermaid](https://mermaid.js.org), enabling you to render diagrams directly inside your wiki notebooks.
 
-TiddlyWiki notebook including the plugin: <http://efurlanm.github.io/mermaid-tw5> . You can install the plugin by navigating to the site and dragging the plugin link to your TiddlyWiki.
+**Live demo:** <https://asophila.github.io/mermaid-tw5>  
+**Install:** Open the demo and drag the `$:/plugins/orange/mermaid-tw5` tiddler into your wiki.
 
-I'm not the author of the plugin, I just got what I was already ready, and updated the mermaid.min.js. All credits are from the original authors:
+---
 
-* <http://github.com/gt6796c/mermaid-tw5>
-* <http://github.com/jasonmhoule/tw5-mermaid>
-* <http://github.com/cedarvera/mermaid-tw5>
-* <http://github.com/jceb/mermaid-tw5>
-* <https://github.com/mermaid-js/mermaid>
-* and others
+## What You Get
+
+- **24+ diagram types** — from flowcharts to mindmaps, timelines, Sankey diagrams, and more
+- **Lazy loading** — libraries only load when a page actually contains a diagram
+- **Click-to-zoom** — pan and zoom any diagram with D3.js
+- **Clickable links** — navigate between tiddlers from inside diagrams
+- **Safe errors** — malformed diagrams show friendly messages, not raw stack traces
+
+---
 
 ## Supported Diagram Types
 
-The plugin uses **Mermaid 11.14.0** and supports all of the following diagram types:
+The plugin uses **Mermaid 11.14.0**.
 
+### Core types
 - **Flowchart** — process flows and decision trees
 - **Sequence Diagram** — interaction sequences and message flows
 - **Class Diagram** — object-oriented class relationships
@@ -30,35 +35,77 @@ The plugin uses **Mermaid 11.14.0** and supports all of the following diagram ty
 - **User Journey** — user experience flows
 - **Requirement Diagram** — requirements and traceability
 - **C4 Context** — system architecture diagrams
-- **Mindmap** — hierarchical mind mapping *(Mermaid 10+)*
-- **Timeline** — chronological events and milestones *(Mermaid 10+)*
-- **Sankey** — flow diagrams with proportional width *(Mermaid 10+)*
-- **XY Chart** — scatter and line charts *(Mermaid 10+)*
-- **Quadrant Chart** — four-quadrant analysis *(Mermaid 10+)*
-- **Block Diagram** — block diagram structures *(Mermaid 11+)*
-- **Architecture** — system architecture diagrams *(Mermaid 11+)*
-- **Kanban** — Kanban board states *(Mermaid 11+)*
-- **Packet** — network packet structures *(Mermaid 11+)*
-- **Radar** — multi-variable comparison charts *(Mermaid 11+)*
-- **Wardley Map** — business strategy mapping *(Mermaid 11+, beta)*
-- **TreeView** — tree structures *(Mermaid 11.14+)*
-- **Ishikawa** — fishbone / cause-and-effect diagrams *(Mermaid 11.13+, beta)*
+
+### New in Mermaid 10–11
+- **Mindmap** — hierarchical mind mapping
+- **Timeline** — chronological events and milestones
+- **Sankey** — flow diagrams with proportional width
+- **XY Chart** — scatter and line charts
+- **Quadrant Chart** — four-quadrant analysis
+- **Block Diagram** — block diagram structures
+- **Architecture** — system architecture diagrams
+- **Kanban** — Kanban board states
+- **Packet** — network packet structures
+- **Radar** — multi-variable comparison charts
+- **Wardley Map** — business strategy mapping *(beta)*
+- **TreeView** — tree structures
+- **Ishikawa** — fishbone / cause-and-effect diagrams *(beta)*
+
+---
+
+## How to Use
+
+### Method 1: The `<$mermaid>` widget
+
+```html
+<$mermaid text='
+graph TD
+    A --> B
+    B --> C
+'></$mermaid>
+```
+
+### Method 2: Block syntax
+
+Use `$$$text/vnd.tiddlywiki.mermaid` and `$$$` as delimiters:
+
+```
+$$$text/vnd.tiddlywiki.mermaid
+mindmap
+  root((My Idea))
+    Branch 1
+      Sub-item A
+    Branch 2
+$$$
+```
+
+### Method 3: Tiddler type
+
+Set a tiddler's type to `text/vnd.tiddlywiki.mermaid` and write diagram syntax directly:
+
+```
+timeline
+    title Project Roadmap
+    2024 : Discovery
+    2025 : Build
+    2026 : Launch
+```
+
+Then transclude it anywhere with `{{MyDiagramTiddler}}`.
+
+---
 
 ## Development
 
 ### Running Tests
 
-This project uses Node.js built-in test runner. No npm install is required.
-
 ```bash
 node --test
 ```
 
-Tests live in the `tests/` directory and cover widget rendering, typed parser behavior, and utility functions.
+Tests cover widget rendering, typed parser behavior, lazy loading, and utility functions.
 
 ### Building the Demo
-
-The demo site is a pre-built TiddlyWiki hosted on GitHub Pages. To rebuild it locally:
 
 ```bash
 npm install -g tiddlywiki
@@ -70,8 +117,24 @@ cp mermaid-tw5/output/index.html docs/index.html
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for coding standards and the pull request process.
 
+---
+
+## Credits
+
+This plugin is a continuation of earlier community efforts:
+
+- <https://github.com/gt6796c/mermaid-tw5>
+- <https://github.com/jasonmhoule/tw5-mermaid>
+- <https://github.com/cedarvera/mermaid-tw5>
+- <https://github.com/jceb/mermaid-tw5>
+- <https://github.com/mermaid-js/mermaid>
+
+Current maintenance by **asophila**.
+
+---
+
 ## Notes
 
-1. The plugin uses **Mermaid 11.14.0** (~3.0 MB). This is a significant increase from the previous 9.3.0 (~0.9 MB), but enables 10+ new diagram types including mindmaps, timelines, Sankey diagrams, XY charts, and more.
-2. Libraries are loaded **lazily** — pages without diagrams do not load `mermaid.min.js` or `d3.v6.min.js` until the first diagram is rendered.
-3. The D3 zoom interaction (click to toggle pan/zoom) is preserved for all compatible diagram types.
+1. **Mermaid 11.14.0** (~3.0 MB) replaces the previous 9.3.0 (~0.9 MB). The size increase unlocks 10+ new diagram types. Lazy loading ensures pages *without* diagrams pay zero cost.
+2. Some new diagram types (mindmap, timeline, block, etc.) use Mermaid's async renderer. The widget automatically falls back from sync to async rendering when needed.
+3. D3 zoom (click to toggle pan/zoom) works for all compatible diagram types.
