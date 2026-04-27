@@ -22,6 +22,7 @@ describe('wrapper', () => {
         widget.attributes = {};
         widget.wiki = global.$tw.wiki;
         widget.variables = {};
+        global.$tw.browser = true;
 
         var parent = global.document.createElement('div');
         widget.render(parent, null);
@@ -40,6 +41,7 @@ describe('wrapper', () => {
         widget.attributes = {};
         widget.wiki = global.$tw.wiki;
         widget.variables = {};
+        global.$tw.browser = true;
 
         var parent = global.document.createElement('div');
         assert.doesNotThrow(function() {
@@ -75,6 +77,7 @@ describe('wrapper', () => {
             widget.attributes = {};
             widget.wiki = global.$tw.wiki;
             widget.variables = {};
+            global.$tw.browser = true;
 
             var parent = global.document.createElement('div');
             widget.render(parent, null);
@@ -105,6 +108,7 @@ describe('wrapper', () => {
             widget2.attributes = {};
             widget2.wiki = global.$tw.wiki;
             widget2.variables = {};
+            global.$tw.browser = true;
 
             var parent2 = global.document.createElement('div');
             widget2.render(parent2, null); // Second render — should not reload

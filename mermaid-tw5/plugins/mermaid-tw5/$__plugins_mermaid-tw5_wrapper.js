@@ -70,6 +70,18 @@ modified: E Furlan 2022-05-08
                     bindFunctions(divNode);
                 }
             };
+
+        // Skip rendering during static HTML generation (Node.js build).
+        // Mermaid 11 requires a browser DOM (document) to render diagrams.
+        if (!$tw.browser) {
+            divNode.innerHTML = '<div style="border-left:3px solid #2196F3;background:#e3f2fd;padding:8px 12px;">' +
+                '<strong>Mermaid diagram</strong> (interactive rendering requires a browser)' +
+                '</div>';
+            parent.insertBefore(divNode, nextSibling);
+            this.domNodes.push(divNode);
+            return;
+        }
+
         try {
             // Lazy-load mermaid and D3 on first render
             // Libraries are only loaded when a diagram is actually rendered
