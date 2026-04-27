@@ -5,16 +5,16 @@ author: Nathaniel Jones 2017-05-26
 modified: E Furlan 2022-05-08
 */
 (function() {
-    "use strict";
+    'use strict';
 
     function Rocklib() {
         this.uniqueID = 1;
-        this.hue = .2;
+        this.hue = 0.2;
     };
     // tries to un-parse the wikitext. of dubious value
     Rocklib.prototype.getScriptBody = function(src, attr) {
         var scriptBody = src.getAttribute(attr, src
-            .parseTreeNode.text || "");
+            .parseTreeNode.text || '');
         if (src.parseTreeNode.text) {
             scriptBody = src.parseTreeNode.text;
         } else if (src.parseTreeNode.children) {
@@ -23,26 +23,26 @@ modified: E Furlan 2022-05-08
                 var kk = kids[k];
                 switch (kk.type) {
                     // no wikiparsing found
-                    case "text":
+                    case 'text':
                         scriptBody += kk.text;
                         break;
                         // internal link, make it a permalink reference
-                    case "link":
-                        scriptBody += "#" + kk.children[0].text;
+                    case 'link':
+                        scriptBody += '#' + kk.children[0].text;
                         break;
                         // -- gets interpreted as an HTML element, we
                         // don't want that
-                    case "entity":
+                    case 'entity':
                         switch (kk.entity) {
-                            case "&ndash;":
-                                scriptBody += "--";
+                            case '&ndash;':
+                                scriptBody += '--';
                                 break;
                         };
                         break;
                         // just re-write it back out
-                    case "element":
+                    case 'element':
                         switch (kk.tag) {
-                            case "a":
+                            case 'a':
                                 scriptBody += kk.children[0]
                                     .text;
                         }
@@ -76,14 +76,14 @@ modified: E Furlan 2022-05-08
                         var fi = f.indexOf(tag);
                         if (fi != 0) continue;
                         var k = f.substring(tag.length + 1);
-                        var cap = k.indexOf(".");
+                        var cap = k.indexOf('.');
                         while (cap > -1) {
                             if (k.length < cap + 2) break;
                             k = k.substring(0, cap) + k.charAt(
                                     cap + 1)
                                 .toUpperCase() + k.substring(
                                     cap + 2);
-                            cap = k.indexOf(".");
+                            cap = k.indexOf('.');
                         }
                         var v = t.fields[f];
                         // try as JSON
@@ -130,20 +130,20 @@ modified: E Furlan 2022-05-08
     @returns {Element}
     */
     Rocklib.prototype.getCanvas = function(src, tag, type) {
-        type = typeof(type) === "undefined" ? "div" : type;
-        var height = src.getAttribute("height");
-        var width = src.getAttribute("width");
+        type = typeof(type) === 'undefined' ? 'div' : type;
+        var height = src.getAttribute('height');
+        var width = src.getAttribute('width');
         var canvas = src.document.createElement(type);
-        var style = "";
-        if (type === "canvas") {
+        var style = '';
+        if (type === 'canvas') {
             if (width) canvas.width = width;
             if (height) canvas.height = height;
         } else {
-            if (height) style += " height:" + height;
-            if (width) style += " width:" + width;
-            if (style) canvas.setAttribute("style", style);
+            if (height) style += ' height:' + height;
+            if (width) style += ' width:' + width;
+            if (style) canvas.setAttribute('style', style);
         }
-        canvas.setAttribute("id", tag + "_" + this.uniqueID);
+        canvas.setAttribute('id', tag + '_' + this.uniqueID);
         this.uniqueID++;
         return canvas;
     };
@@ -159,7 +159,7 @@ modified: E Furlan 2022-05-08
         this.hue += golden_ratio_conjugate;
         this.hue %= 1;
         var rgb = this.hsv_to_rgb(this.hue, s, v);
-        return "#" + rgb.r.toString(16) + rgb.g.toString(16) +
+        return '#' + rgb.r.toString(16) + rgb.g.toString(16) +
             rgb.b.toString(16);
     };
     /*

@@ -11,15 +11,15 @@ modified: E Furlan 2022-05-08
     'use strict';
 
     var uniqueID = 1,
-        Rocklib = require("$:/plugins/orange/mermaid-tw5/widget-tools.js").rocklib,
-        Widget = require("$:/core/modules/widgets/widget.js").widget,
+        Rocklib = require('$:/plugins/orange/mermaid-tw5/widget-tools.js').rocklib,
+        Widget = require('$:/core/modules/widgets/widget.js').widget,
         rocklib = new Rocklib(),
-        mermaidAPI = require("$:/plugins/orange/mermaid-tw5/mermaid.min.js")
+        mermaidAPI = require('$:/plugins/orange/mermaid-tw5/mermaid.min.js')
         .mermaidAPI;
 
         // Add D3 library to support pan and zoom
         // by fkmiec 2023-05-21
-        var d3 = require("$:/plugins/orange/mermaid-tw5/d3.v6.min.js");
+        var d3 = require('$:/plugins/orange/mermaid-tw5/d3.v6.min.js');
 
     var MermaidWidget = function(parseTreeNode, options) {
         this.initialise(parseTreeNode, options);
@@ -30,8 +30,8 @@ modified: E Furlan 2022-05-08
         this.parentDomNode = parent;
         this.computeAttributes();
         this.execute();
-        var tag = "mermaid",
-            scriptBody = rocklib.getScriptBody(this, "text"),
+        var tag = 'mermaid',
+            scriptBody = rocklib.getScriptBody(this, 'text'),
             divNode = rocklib.getCanvas(this, tag),
             _insertSVG = function(svgCode, bindFunctions) {
                 divNode.innerHTML = svgCode;
@@ -64,7 +64,7 @@ modified: E Furlan 2022-05-08
                 if(!zoomEventListenersApplied) {
                     var id = Date.now().toString(36);
                     this.firstChild.setAttribute('id', id);
-                    var svg = d3.select("#" + id);
+                    var svg = d3.select('#' + id);
                     svg.html('<g>' + svg.html() + '</g>');
                     var inner = svg.select('g');
                     var zoom = d3.zoom().filter(function() { return isZoomEnabled; }).on('zoom', function(event) {

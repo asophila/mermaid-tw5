@@ -12,13 +12,13 @@ This parser wraps unadorned railroad syntax into a railroad widget
     // jslint node: true, browser: true
     // global $tw: false
     'use strict';
-    let MermaidParser = function(type, text, options) {
-        let element = {
-            type: "mermaid",
-            tag: "$mermaid",
+    var MermaidParser = function(type, text, options) {
+        var element = {
+            type: 'mermaid',
+            tag: '$mermaid',
             text: text
         };
         this.tree = [element];
     };
-    exports["text/vnd.tiddlywiki.mermaid"] = MermaidParser;
+    exports['text/vnd.tiddlywiki.mermaid'] = MermaidParser;
 })();
