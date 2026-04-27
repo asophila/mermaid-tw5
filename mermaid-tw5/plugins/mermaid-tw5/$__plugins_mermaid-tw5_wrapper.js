@@ -21,6 +21,37 @@ modified: E Furlan 2022-05-08
         // by fkmiec 2023-05-21
         var d3 = require('$:/plugins/orange/mermaid-tw5/d3.v6.min.js');
 
+    function escapeHtml(text) {
+        if (text === null || text === undefined) {
+            return '';
+        }
+        return String(text)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+    }
+
+    function getSimpleStack(ex) {
+        if (!ex || !ex.stack) {
+            return '';
+        }
+        var lines = String(ex.stack).split('\n');
+        var frames = [];
+        for (var i = 0; i < lines.length && frames.length < 3; i++) {
+            var line = lines[i].trim();
+            if (line.indexOf('at ') === 0) {
+                var match = line.match(/at\s+(?:[^\s(]+\s+\()?([^)]+)\)?/);
+                if (match) {
+                    var loc = match[1];
+                    var fileName = loc.split('/').pop().split(':')[0];
+                    frames.push(fileName);
+                }
+            }
+        }
+        return frames.join('\n');
+    }
+
     var MermaidWidget = function(parseTreeNode, options) {
         this.initialise(parseTreeNode, options);
     };
@@ -80,7 +111,19 @@ modified: E Furlan 2022-05-08
             mermaidAPI.render(divNode.id, scriptBody, _insertSVG);
 
         } catch (ex) {
-            divNode.innerText = ex;
+            var errorHtml = '<div style="border-left:3px solid #ff4444;background:#fff0f0;padding:8px 12px;">' +
+                '<p><strong>Mermaid diagram could not be rendered.</strong> The diagram syntax may contain an error.</p>' +
+                '<pre style="margin:8px 0;padding:6px;background:#ffffff;border:1px solid #ffcccc;overflow:auto;">' +
+                escapeHtml(scriptBody) +
+                '</pre>' +
+                '<details>' +
+                '<summary style="cursor:pointer;color:#666;font-size:12px;">Technical details</summary>' +
+                '<p style="margin:8px 0 0 0;font-size:12px;"><strong>' + escapeHtml(ex.name || 'Error') + ':</strong> ' +
+                escapeHtml(ex.message || String(ex)) + '</p>' +
+                '<pre style="margin:4px 0 0 0;font-size:11px;overflow:auto;">' + escapeHtml(getSimpleStack(ex)) + '</pre>' +
+                '</details>' +
+                '</div>';
+            divNode.innerHTML = errorHtml;
         }
         parent.insertBefore(divNode, nextSibling);
         this.domNodes.push(divNode);
