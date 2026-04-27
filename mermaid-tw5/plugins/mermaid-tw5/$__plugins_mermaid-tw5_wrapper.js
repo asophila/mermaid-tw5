@@ -14,6 +14,7 @@ modified: E Furlan 2022-05-08
         Rocklib = require('$:/plugins/orange/mermaid-tw5/widget-tools.js').rocklib,
         Widget = require('$:/core/modules/widgets/widget.js').widget,
         rocklib = new Rocklib(),
+        mermaidModule = null,
         mermaidAPI = null,
         d3 = null;
 
@@ -74,7 +75,8 @@ modified: E Furlan 2022-05-08
             // Libraries are only loaded when a diagram is actually rendered
             if (!mermaidAPI) {
                 divNode.innerHTML = '<div style="border-left:3px solid #999;background:#f5f5f5;padding:8px 12px;">Loading diagram…</div>';
-                mermaidAPI = require('$:/plugins/orange/mermaid-tw5/mermaid.min.js').mermaidAPI;
+                mermaidModule = require('$:/plugins/orange/mermaid-tw5/mermaid.min.js');
+                mermaidAPI = mermaidModule.mermaidAPI || mermaidModule;
                 d3 = require('$:/plugins/orange/mermaid-tw5/d3.v6.min.js');
             }
 
@@ -112,7 +114,35 @@ modified: E Furlan 2022-05-08
             });
             //END ZOOM LOGIC
 
-            mermaidAPI.render(divNode.id, scriptBody, _insertSVG);
+            var renderDiagram = function() {
+                mermaidAPI.render(divNode.id, scriptBody, _insertSVG);
+            };
+
+            try {
+                renderDiagram();
+            } catch (ex) {
+                // Mermaid 11+ async diagram types (mindmap, timeline, etc.)
+                // require renderAsync instead of sync render
+                if (ex.message && ex.message.indexOf('Diagram is a promise') !== -1 && mermaidModule.renderAsync) {
+                    mermaidModule.renderAsync(divNode.id, scriptBody, _insertSVG).catch(function(asyncEx) {
+                        var errorHtml = '<div style="border-left:3px solid #ff4444;background:#fff0f0;padding:8px 12px;">' +
+                            '<p><strong>Mermaid diagram could not be rendered.</strong> The diagram syntax may contain an error.</p>' +
+                            '<pre style="margin:8px 0;padding:6px;background:#ffffff;border:1px solid #ffcccc;overflow:auto;">' +
+                            escapeHtml(scriptBody) +
+                            '</pre>' +
+                            '<details>' +
+                            '<summary style="cursor:pointer;color:#666;font-size:12px;">Technical details</summary>' +
+                            '<p style="margin:8px 0 0 0;font-size:12px;"><strong>' + escapeHtml(asyncEx.name || 'Error') + ':</strong> ' +
+                            escapeHtml(asyncEx.message || String(asyncEx)) + '</p>' +
+                            '<pre style="margin:4px 0 0 0;font-size:11px;overflow:auto;">' + escapeHtml(getSimpleStack(asyncEx)) + '</pre>' +
+                            '</details>' +
+                            '</div>';
+                        divNode.innerHTML = errorHtml;
+                    });
+                } else {
+                    throw ex;
+                }
+            }
 
         } catch (ex) {
             var errorHtml = '<div style="border-left:3px solid #ff4444;background:#fff0f0;padding:8px 12px;">' +

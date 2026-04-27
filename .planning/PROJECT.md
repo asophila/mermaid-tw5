@@ -2,7 +2,7 @@
 
 ## What This Is
 
-A TiddlyWiki 5 plugin that embeds the Mermaid.js diagramming library, enabling users to render flowcharts, sequence diagrams, class diagrams, state diagrams, Gantt charts, Git graphs, and more directly inside TiddlyWiki notebooks. The plugin provides both a `<$mermaid>` widget and a dedicated MIME-type parser for seamless integration.
+A TiddlyWiki 5 plugin that embeds the Mermaid.js diagramming library, enabling users to render flowcharts, sequence diagrams, class diagrams, state diagrams, Gantt charts, Git graphs, mindmaps, timelines, Sankey diagrams, and more directly inside TiddlyWiki notebooks. The plugin provides both a `<$mermaid>` widget and a dedicated MIME-type parser for seamless integration.
 
 ## Core Value
 
@@ -29,10 +29,11 @@ TiddlyWiki users can create and view rich Mermaid diagrams natively within their
 - ✓ **PERF-01**: Lazy loading of mermaid.js and D3.js — validated in Phase 3, v0.5.0
 - ✓ **AUTO-01**: CI/CD pipeline for build verification and GitHub Pages deployment — validated in Phase 5, v0.5.0
 - ✓ **DOCS-02**: Developer setup and contribution guidelines — validated in Phase 5, v0.5.0
+- ✓ **UPDT-01**: Upgrade to modern Mermaid.js — validated 2026-04-27; upgraded to Mermaid 11.14.0
 
 ### Active
 
-- [ ] **UPDT-01**: Evaluate and adopt a modern Mermaid.js version (or lite build) that controls bundle size — deferred in Phase 4, v0.5.0; tracking upstream
+(None — all v1 requirements shipped. Next milestone requirements to be defined.)
 
 ### Out of Scope
 
@@ -46,16 +47,16 @@ TiddlyWiki users can create and view rich Mermaid diagrams natively within their
 
 - **Technical environment**: TiddlyWiki 5 plugin architecture with no build pipeline, no npm, no bundler
 - **Prior work**: Consolidation of multiple earlier community efforts (gt6796c, jasonmhoule, cedarvera, jceb)
-- **Bundle size tension**: Empty TW 5.3.3 is ~2.4 MB; mermaid 9.3.0 adds ~0.9 MB; mermaid 10.x would add ~3.2 MB — maintainer intentionally stayed on older version
-- **Upstream tracking**: Waiting on mermaid-js/mermaid#4616 (lite version request)
-- **Maintenance model**: Single maintainer (E Furlan), infrequent updates, no automated dependency updates
+- **Bundle size**: Empty TW 5.3.3 is ~2.4 MB; mermaid 11.14.0 adds ~3.0 MB; lazy loading mitigates impact on non-diagram pages
+- **Upstream tracking**: Previously tracked mermaid-js/mermaid#4616 for lite build; no longer blocking as full bundle was adopted
+- **Maintenance model**: Single maintainer (E Furlan), infrequent updates, automated CI/CD now in place
 - **Fragile areas**: WikiText un-parsing (`getScriptBody`) described by original author as "twitchy difficult to maintain and buggy"
-- **Current state (v0.5.0)**: 13 tests passing, lazy loading active, GitHub Actions CI/CD live, developer docs complete
+- **Current state (post-v0.5.0)**: Mermaid 11.14.0 active, 13 tests passing, lazy loading active, GitHub Actions CI/CD live, developer docs complete
 
 ## Constraints
 
 - **Tech stack**: Must remain compatible with TiddlyWiki 5 module system; no npm/build tools introduced without strong justification
-- **Bundle size**: Plugin overhead must remain reasonable relative to empty TiddlyWiki (~2.4 MB)
+- **Bundle size**: Plugin overhead is now ~3.0 MB for Mermaid alone; mitigated by lazy loading on non-diagram pages
 - **Compatibility**: Must work in both browser and Node.js TiddlyWiki environments
 - **Dependencies**: Mermaid.js and D3.js are vendored; updates require manual verification
 
@@ -63,11 +64,12 @@ TiddlyWiki users can create and view rich Mermaid diagrams natively within their
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Stay on Mermaid 9.3.0 | Measured v10.9.0=3.34 MB, v11.14.0=3.16 MB, tiny=2.12 MB; all exceed 1.5 MB deferral threshold. No lite build available upstream (#4616). Promise-based API migration is feasible (~15–25 lines) but size alone blocks adoption. | ⚠️ Deferred — Revisit when upstream lite build <1.2 MB or Mermaid provides modular UMD bundles. Tracked: mermaid-js/mermaid#4616 |
+| Upgrade to Mermaid 11.14.0 | Bundle size accepted (~3.0 MB) in exchange for 10+ new diagram types: mindmap, timeline, Sankey, XY chart, quadrant, block, architecture, kanban, packet, radar, Wardley maps, treeview, ishikawa. Lazy loading mitigates non-diagram page impact. | ✓ Good — expanded diagram catalog significantly |
 | `securityLevel: 'loose'` | Required for clickable diagram interactions within TiddlyWiki | ✓ Good — documented trade-off for personal notebooks |
 | Inline rocklib (v0.3.5) | Remove external dependency on `$:/plugins/orange/mermaid-tw5/widget-tools.js` | ✓ Good — reduced fragility from external plugin dependency |
 | D3 zoom via click toggle | Enables pan/zoom without complex UI chrome | ⚠️ Revisit — unconventional UX pattern |
-| Lazy loading of mermaid.js and D3.js | Defer library loading until first diagram render; pages without diagrams save ~1.17 MB. Phase 4 confirmed modern Mermaid is 2.1–3.3 MB, making lazy loading even more critical for controlling perceived load. | ✓ Good — reduces initial load for non-diagram pages |
+| Lazy loading of mermaid.js and D3.js | Defer library loading until first diagram render; pages without diagrams save ~3.0 MB + D3 overhead | ✓ Good — essential given modern Mermaid size |
+| Stay on Mermaid 9.3.0 | Previous decision: measured v10.9.0=3.34 MB, v11.14.0=3.16 MB, tiny=2.12 MB; all exceeded 1.5 MB deferral threshold. | — Overridden 2026-04-27: bundle size accepted for new diagram types |
 
 ## Evolution
 
@@ -87,4 +89,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-27 after v0.5.0 milestone completion*
+*Last updated: 2026-04-27 after Mermaid 11.14.0 upgrade*
