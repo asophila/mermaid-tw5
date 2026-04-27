@@ -15,7 +15,33 @@ I'm not the author of the plugin, I just got what I was already ready, and updat
 * <https://github.com/mermaid-js/mermaid>
 * and others
 
-Notes:
+## Development
+
+### Running Tests
+
+This project uses Node.js built-in test runner. No npm install is required.
+
+```bash
+node --test
+```
+
+Tests live in the `tests/` directory and cover widget rendering, typed parser behavior, and utility functions.
+
+### Building the Demo
+
+The demo site is a pre-built TiddlyWiki hosted on GitHub Pages. To rebuild it locally:
+
+```bash
+npm install -g tiddlywiki
+tiddlywiki mermaid-tw5 --build index
+cp mermaid-tw5/output/index.html docs/index.html
+```
+
+### Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for coding standards and the pull request process.
+
+## Notes
 
 1. The mermaid.min.js 9.3.0 version currently used in the plugin is 0.9 MB in size and works well.
 2. The new version 10.9.0 of mermaid.min.js is 3.2 MB in size, which makes it a huge overhead (the empty TiddlyWiki 5.3.3 is 2.4 MB).
