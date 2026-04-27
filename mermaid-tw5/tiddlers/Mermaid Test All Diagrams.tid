@@ -1,0 +1,305 @@
+title: Mermaid Test All Diagrams
+author: asophila
+created: 20260427
+tags: [[mermaid test]]
+type: text/vnd.tiddlywiki
+
+This tiddler tests every diagram type supported by Mermaid 11.14.0 in the mermaid-tw5 plugin.
+
+!! Flowchart
+
+<$mermaid text='''
+graph TD
+    A[Start] --> B{Decision}
+    B -->|Yes| C[Action 1]
+    B -->|No| D[Action 2]
+    C --> E[End]
+    D --> E
+'''/>
+
+!! Sequence Diagram
+
+<$mermaid text='''
+sequenceDiagram
+    participant A as Alice
+    participant B as Bob
+    A->>B: Hello Bob
+    B-->>A: Hi Alice
+    A->>B: How are you?
+'''/>
+
+!! Class Diagram
+
+<$mermaid text='''
+classDiagram
+    class Animal {
+        +String name
+        +makeSound()
+    }
+    class Dog {
+        +fetch()
+    }
+    Animal <|-- Dog
+'''/>
+
+!! State Diagram
+
+<$mermaid text='''
+stateDiagram-v2
+    [*] --> Idle
+    Idle --> Running : start
+    Running --> Idle : stop
+    Running --> Error : fail
+    Error --> Idle : reset
+'''/>
+
+!! Entity Relationship
+
+<$mermaid text='''
+erDiagram
+    CUSTOMER ||--o{ ORDER : places
+    ORDER ||--|{ LINE_ITEM : contains
+    CUSTOMER {
+        string name
+        string email
+    }
+'''/>
+
+!! Gantt Chart
+
+<$mermaid text='''
+gantt
+    title Project Schedule
+    dateFormat YYYY-MM-DD
+    section Phase 1
+    Research    :a1, 2024-01-01, 30d
+    Design      :a2, after a1, 20d
+    section Phase 2
+    Develop     :a3, after a2, 45d
+    Test        :a4, after a3, 15d
+'''/>
+
+!! Pie Chart
+
+<$mermaid text='''
+pie title Time Distribution
+    "Coding" : 40
+    "Meetings" : 25
+    "Testing" : 20
+    "Docs" : 15
+'''/>
+
+!! Git Graph
+
+<$mermaid text='''
+gitGraph
+    commit
+    branch feature
+    checkout feature
+    commit
+    commit
+    checkout main
+    merge feature
+    commit
+'''/>
+
+!! User Journey
+
+<$mermaid text='''
+journey
+    title User Journey
+    section Discovery
+      Visit site: 5: User
+      Read docs: 4: User
+    section Adoption
+      Install plugin: 3: User
+      Create diagram: 5: User
+'''/>
+
+!! Requirement Diagram
+
+<$mermaid text='''
+requirementDiagram
+    requirement TestReq {
+        id: 1
+        text: The system shall render diagrams
+        risk: low
+        verifymethod: test
+    }
+    element Renderer {
+        type: module
+    }
+    Renderer - satisfies -> TestReq
+'''/>
+
+!! C4 Context
+
+<$mermaid text='''
+C4Context
+    title System Context
+    Person(user, "User", "A wiki user")
+    System_Boundary(b1, "Wiki") {
+        System(plugin, "Mermaid Plugin", "Renders diagrams")
+    }
+    Rel(user, plugin, "Creates diagrams")
+'''/>
+
+!! Mindmap
+
+<$mermaid text='''
+mindmap
+  root((Mermaid))
+    Core
+      Flowchart
+      Sequence
+      Class
+    New in 11
+      Mindmap
+      Timeline
+      Sankey
+'''/>
+
+!! Timeline
+
+<$mermaid text='''
+timeline
+    title Project History
+    2024 : Initial fork
+         : Mermaid 9.3.0
+    2025 : Testing added
+         : Lazy loading
+    2026 : Upgrade to 11.14.0
+         : 24+ diagram types
+'''/>
+
+!! Sankey
+
+<$mermaid text='''
+sankey-beta
+%% source,target,value
+Budget,Development,40
+Budget,Design,20
+Budget,Testing,15
+Budget,Docs,10
+Budget,Overhead,15
+'''/>
+
+!! XY Chart
+
+<$mermaid text='''
+xychart-beta
+    title "Monthly Activity"
+    x-axis [Jan, Feb, Mar, Apr, May, Jun]
+    y-axis "Commits" 0 --> 100
+    bar [20, 35, 45, 30, 55, 60]
+    line [15, 25, 35, 40, 50, 55]
+'''/>
+
+!! Quadrant Chart
+
+<$mermaid text='''
+quadrantChart
+    title Reach and Engagement
+    quadrant-names High Reach-Low Engagement, High Reach-High Engagement, Low Reach-Low Engagement, Low Reach-High Engagement
+    Campaign A: [0.8, 0.7]
+    Campaign B: [0.3, 0.6]
+    Campaign C: [0.7, 0.2]
+    Campaign D: [0.2, 0.3]
+'''/>
+
+!! Block Diagram
+
+<$mermaid text='''
+block-beta
+    columns 3
+    a["Start"] b["Process"] c["End"]
+    a --> b --> c
+'''/>
+
+!! Architecture
+
+<$mermaid text='''
+architecture
+    group frontend(internet)[Frontend]
+        service browser(server)[Browser]
+    group backend(intranet)[Backend]
+        service wiki(server)[TiddlyWiki]
+        service plugin(server)[Mermaid Plugin]
+    browser --> wiki: HTTP
+    wiki --> plugin: render
+'''/>
+
+!! Kanban
+
+<$mermaid text='''
+kanban
+    Todo
+        [Write tests]
+        [Update docs]
+    In Progress
+        [Refactor wrapper]
+    Done
+        [Upgrade Mermaid]
+        [Add CI/CD]
+'''/>
+
+!! Packet Diagram
+
+<$mermaid text='''
+packet-beta
+title TCP Header
+0-15: "Source Port"
+16-31: "Destination Port"
+32-63: "Sequence Number"
+'''/>
+
+!! Radar Chart
+
+<$mermaid text='''
+radar-beta
+    axes Quality, Speed, Cost, Reliability, Maintainability
+    scale 0 10
+    Project A: [8, 7, 6, 9, 7]
+    Project B: [6, 9, 8, 6, 5]
+'''/>
+
+!! Wardley Map
+
+<$mermaid text='''
+wardley-beta
+    title Example Wardley Map
+    anchor Customer [0.95, 0.5]
+    component Website [0.8, 0.7]
+    component API [0.6, 0.4]
+    component Database [0.3, 0.3]
+    Customer --> Website
+    Website --> API
+    API --> Database
+'''/>
+
+!! TreeView
+
+<$mermaid text='''
+treeview
+    root("Project")
+        src("src")
+            wrapper("wrapper.js")
+            parser("typed-parser.js")
+        tests("tests")
+            wrapper_test("wrapper.test.js")
+'''/>
+
+!! Ishikawa (Fishbone)
+
+<$mermaid text='''
+ishikawa-beta
+    title "Diagram Rendering Failure"
+    category "Environment"
+        item "Browser incompatibility"
+        item "Missing fonts"
+    category "Code"
+        item "Syntax error"
+        item "Async timing bug"
+    category "Data"
+        item "Invalid Mermaid syntax"
+'''/>
