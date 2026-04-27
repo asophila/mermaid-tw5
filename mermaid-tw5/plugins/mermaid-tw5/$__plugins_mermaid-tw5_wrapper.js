@@ -21,14 +21,7 @@ modified: E Furlan 2022-05-08
         // by fkmiec 2023-05-21
         var d3 = require("$:/plugins/orange/mermaid-tw5/d3.v6.min.js");
 
-    // Changes to run on TiddlyWiki for Node.js - 2022-12-28
-    // if($tw.browser && !window.mermaidAPI) {
-    //     window.rocklib = new Rocklib();
-    //     window.mermaidAPI = require("$:/plugins/orange/mermaid-tw5/mermaid.min.js")
-    //         .mermaidAPI;
-    // }
-
-    let MermaidWidget = function(parseTreeNode, options) {
+    var MermaidWidget = function(parseTreeNode, options) {
         this.initialise(parseTreeNode, options);
     };
     MermaidWidget.prototype = new Widget();
@@ -46,14 +39,12 @@ modified: E Furlan 2022-05-08
                 // Add bind functions to support click events
                 // by fkmiec 2023-05-21
                 if (bindFunctions) {
-                    console.log("calling bindFunctions");
                     bindFunctions(divNode);
-                    console.log("done calling bindFunctions");
                 }
             };
         try {
-            let options = {
-                theme: ""
+            var options = {
+                theme: ''
             };
             rocklib.getOptions(this, tag, options);
 
@@ -66,31 +57,27 @@ modified: E Furlan 2022-05-08
             });
             // START ZOOM LOGIC: Enable zooming the mermaid diagram with D3
             // by fkmiec 2023-05-21
-            let zoomEventListenersApplied = false;
-            let isZoomEnabled = false;
+            var zoomEventListenersApplied = false;
+            var isZoomEnabled = false;
 
             divNode.addEventListener('click', function() {
-                console.log("Zoom enabled: " + isZoomEnabled);
                 if(!zoomEventListenersApplied) {
-                    console.log("Executing svg.each...");
                     var id = Date.now().toString(36);
-                    console.log("id=" + id);
-                    this.firstChild.setAttribute("id",id);
+                    this.firstChild.setAttribute('id', id);
                     var svg = d3.select("#" + id);
-                    svg.html("<g>" + svg.html() + "</g>");
-                    var inner = svg.select("g");
-                    var zoom = d3.zoom().filter(() => isZoomEnabled).on("zoom", function(event) {
-                        inner.attr("transform", event.transform);
+                    svg.html('<g>' + svg.html() + '</g>');
+                    var inner = svg.select('g');
+                    var zoom = d3.zoom().filter(function() { return isZoomEnabled; }).on('zoom', function(event) {
+                        inner.attr('transform', event.transform);
                     });
                     svg.call(zoom);
                     zoomEventListenersApplied = true;
                 }
-                isZoomEnabled?isZoomEnabled=false:isZoomEnabled=true;
+                isZoomEnabled ? isZoomEnabled = false : isZoomEnabled = true;
             });
             //END ZOOM LOGIC
 
             mermaidAPI.render(divNode.id, scriptBody, _insertSVG);
-            // window.mermaidAPI.render(divNode.id, scriptBody, _insertSVG);
 
         } catch (ex) {
             divNode.innerText = ex;

@@ -117,7 +117,7 @@ modified: E Furlan 2022-05-08
                 }
             }
         } catch (ex) {
-            console.error(ex);
+            // silently ignore parse errors
         }
         return options;
     };
