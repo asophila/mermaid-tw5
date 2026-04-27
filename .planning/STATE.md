@@ -3,22 +3,22 @@ gsd_state_version: 1.0
 milestone: v0.5.0
 milestone_name: milestone
 current_phase: 02
-status: executing
+status: ready_to_plan
 last_updated: "2026-04-27T13:09:19.943Z"
 progress:
   total_phases: 5
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 4
   completed_plans: 2
-  percent: 50
+  percent: 40
 ---
 
 # State: mermaid-tw5
 
 **Project:** mermaid-tw5
-**Current Phase:** 02
+**Current Phase:** 3
 **Current Milestone:** Milestone 1 (v0.4.0)
-**Status:** Executing Phase 02
+**Status:** Ready to plan
 
 ## Project Reference
 
