@@ -20,6 +20,8 @@ TiddlyWiki users can create and view rich Mermaid diagrams natively within their
 - ✓ **CONFIG-01**: Configurable diagram options via tiddler fields and widget attributes — existing
 - ✓ **ERROR-01**: Basic rendering error catching and display — existing
 - ✓ **DOCS-01**: Plugin readme, usage instructions, and example tiddlers — existing
+- ✓ **QUAL-01**: Improve error handling with user-friendly messages instead of raw exceptions — validated in Phase 2
+- ✓ **QUAL-02**: Add automated test suite for widget rendering and parser behavior — validated in Phase 2
 - ✓ **DIST-01**: Pre-built TiddlyWiki demo hosted on GitHub Pages — existing
 
 ### Active
@@ -27,8 +29,6 @@ TiddlyWiki users can create and view rich Mermaid diagrams natively within their
 - [ ] **UPDT-01**: Evaluate and adopt a modern Mermaid.js version (or lite build) that controls bundle size
 - [ ] **CLEAN-01**: Remove debug `console.log` statements from production code
 - [ ] **CLEAN-02**: Remove commented-out dead code (Node.js/browser detection)
-- [ ] **QUAL-01**: Improve error handling with user-friendly messages instead of raw exceptions
-- [ ] **QUAL-02**: Add automated test suite for widget rendering and parser behavior
 - [ ] **PERF-01**: Investigate lazy loading of mermaid.js and D3.js to reduce initial load
 - [ ] **DOCS-02**: Add developer setup and contribution guidelines
 - [ ] **AUTO-01**: Set up CI/CD for automated build verification and GitHub Pages deployment
@@ -85,4 +85,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-26 after initialization*
+*Last updated: 2026-04-27 after Phase 2 completion*
