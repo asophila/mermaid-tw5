@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v0.5.0
 milestone_name: milestone
 current_phase: 5
-status: in_progress
-last_updated: "2026-04-27T23:28:00.000Z"
+status: completed
+last_updated: "2026-04-27T23:40:00.000Z"
 progress:
   total_phases: 5
-  completed_phases: 4
-  total_plans: 8
-  completed_plans: 8
+  completed_phases: 5
+  total_plans: 10
+  completed_plans: 10
   percent: 100
 ---
 
@@ -18,14 +18,14 @@ progress:
 **Project:** mermaid-tw5
 **Current Phase:** 5
 **Current Milestone:** Milestone 2 (v0.5.0)
-**Status:** Phase 5 context gathered — ready for planning
+**Status:** Phase 5 complete — CI/CD workflows and developer documentation added
 
 ## Project Reference
 
 See: `.planning/PROJECT.md` (updated 2026-04-26)
 
 **Core value:** TiddlyWiki users can create and view rich Mermaid diagrams natively within their notebooks without leaving the wiki environment.
-**Current focus:** Phase 5 — developer-experience
+**Current focus:** Phase 5 complete — all phases in Milestone 2 finished
 
 ## Phase Tracker
 
@@ -35,7 +35,7 @@ See: `.planning/PROJECT.md` (updated 2026-04-26)
 | 2 | ✓ | 2/2 | 2/2 | 100% |
 | 3 | ✓ | 1/1 | 2/2 | 100% |
 | 4 | ✓ | 1/1 | 2/2 | 100% |
-| 5 | ○ | 2/2 | 0/0 | 0% |
+| 5 | ✓ | 2/2 | 2/2 | 100% |
 
 ## Recent Activity
 
@@ -50,6 +50,7 @@ See: `.planning/PROJECT.md` (updated 2026-04-26)
 - 2026-04-27: Phase 4 planned — dependency modernization evaluation
 - 2026-04-27: Phase 4 executed — evaluated Mermaid 10.9.0, 11.14.0, and @mermaid-js/tiny; all exceed size threshold; deferral documented in PROJECT.md
 - 2026-04-27: Phase 5 context gathered via `/gsd-discuss-phase 5 --chain`
+- 2026-04-27: Phase 5 executed — GitHub Actions workflows (test + deploy) and developer docs (README + CONTRIBUTING.md) added; 13 tests passing
 
 ## Blockers
 
