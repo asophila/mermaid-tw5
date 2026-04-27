@@ -1,9 +1,24 @@
+---
+gsd_state_version: 1.0
+milestone: v0.5.0
+milestone_name: milestone
+current_phase: —
+status: executing
+last_updated: "2026-04-27T03:47:15.743Z"
+progress:
+  total_phases: 5
+  completed_phases: 0
+  total_plans: 2
+  completed_plans: 0
+  percent: 0
+---
+
 # State: mermaid-tw5
 
 **Project:** mermaid-tw5
 **Current Phase:** —
 **Current Milestone:** Milestone 1 (v0.4.0)
-**Status:** Initialized
+**Status:** Ready to execute
 
 ## Project Reference
 
