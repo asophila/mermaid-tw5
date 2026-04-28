@@ -9,18 +9,18 @@ This tiddler tests every diagram type supported by Mermaid 11.14.0 in the mermai
 
 !! Flowchart
 
-<$mermaid text='''
+<$mermaid text="
 flowchart TD
     A[Start] --> B{Decision}
     B -->|Yes| C[Action 1]
     B -->|No| D[Action 2]
     C --> E[End]
     D --> E
-'''/>
+"/>
 
 !! Sequence Diagram
 
-<$mermaid text='''
+<$mermaid text="
 sequenceDiagram
     participant A as Alice
     participant B as Bob
@@ -29,11 +29,11 @@ sequenceDiagram
     A->>B: How are you?
     Note right of B: Bob thinks
     B-->>A: Fine, thanks!
-'''/>
+"/>
 
 !! Class Diagram
 
-<$mermaid text='''
+<$mermaid text="
 classDiagram
     class Animal {
         +String name
@@ -49,11 +49,11 @@ classDiagram
     }
     Animal <|-- Dog
     Animal <|-- Cat
-'''/>
+"/>
 
 !! State Diagram
 
-<$mermaid text='''
+<$mermaid text="
 stateDiagram-v2
     [*] --> Idle
     Idle --> Running : start
@@ -61,11 +61,11 @@ stateDiagram-v2
     Running --> Error : fail
     Error --> Idle : reset
     Idle --> [*] : shutdown
-'''/>
+"/>
 
 !! Entity Relationship
 
-<$mermaid text='''
+<$mermaid text="
 erDiagram
     CUSTOMER ||--o{ ORDER : places
     ORDER ||--|{ LINE_ITEM : contains
@@ -81,11 +81,11 @@ erDiagram
         string product
         int qty
     }
-'''/>
+"/>
 
 !! Gantt Chart
 
-<$mermaid text='''
+<$mermaid text="
 gantt
     title Project Schedule
     dateFormat YYYY-MM-DD
@@ -95,35 +95,35 @@ gantt
     section Phase 2
     Develop     :a3, after a2, 45d
     Test        :a4, after a3, 15d
-'''/>
+"/>
 
 !! Pie Chart
 
-<$mermaid text='''
+<$mermaid text="""
 pie title Time Distribution
     "Coding" : 40
     "Meetings" : 25
     "Testing" : 20
     "Docs" : 15
-'''/>
+"""/>
 
 !! Git Graph
 
-<$mermaid text='''
+<$mermaid text="
 gitGraph
-    commit id: "init"
+    commit
     branch feature
     checkout feature
-    commit id: "add feature"
-    commit id: "fix tests"
+    commit
+    commit
     checkout main
-    merge feature id: "merge feature"
-    commit id: "release"
-'''/>
+    merge feature
+    commit
+"/>
 
 !! User Journey
 
-<$mermaid text='''
+<$mermaid text="
 journey
     title User Journey
     section Discovery
@@ -134,11 +134,11 @@ journey
       Create diagram: 5: User
     section Mastery
       Share with team: 5: User, Team
-'''/>
+"/>
 
 !! Requirement Diagram
 
-<$mermaid text='''
+<$mermaid text="
 requirementDiagram
     requirement render_req {
         id: 1
@@ -157,11 +157,11 @@ requirementDiagram
     }
     Renderer - satisfies -> render_req
     Renderer - satisfies -> perf_req
-'''/>
+"/>
 
 !! C4 Context
 
-<$mermaid text='''
+<$mermaid text="""
 C4Context
     title System Context
     Person(user, "User", "A wiki user")
@@ -171,11 +171,11 @@ C4Context
     }
     Rel(user, tw, "Edits")
     Rel(tw, plugin, "Invokes")
-'''/>
+"""/>
 
 !! Mindmap
 
-<$mermaid text='''
+<$mermaid text="
 mindmap
   root((Mermaid 11))
     Flowcharts
@@ -191,11 +191,11 @@ mindmap
       sankey-beta
       packet-beta
       architecture-beta
-'''/>
+"/>
 
 !! Timeline
 
-<$mermaid text='''
+<$mermaid text="
 timeline
     title Project History
     2022 : Initial release
@@ -204,11 +204,11 @@ timeline
          : Lazy loading
     2026 : Upgrade to Mermaid 11
          : 21 diagram types
-'''/>
+"/>
 
 !! Sankey
 
-<$mermaid text='''
+<$mermaid text="
 sankey-beta
 %% source,target,value
 Budget,Development,40
@@ -216,22 +216,22 @@ Budget,Design,20
 Budget,Testing,15
 Budget,Docs,10
 Budget,Overhead,15
-'''/>
+"/>
 
 !! XY Chart
 
-<$mermaid text='''
+<$mermaid text="""
 xychart-beta
-    title Monthly Activity
+    title "Monthly Activity"
     x-axis [Jan, Feb, Mar, Apr, May, Jun]
-    y-axis Commits 0 --> 100
+    y-axis "Commits" 0 --> 100
     bar [20, 35, 45, 30, 55, 60]
     line [15, 25, 35, 40, 50, 55]
-'''/>
+"""/>
 
 !! Quadrant Chart
 
-<$mermaid text='''
+<$mermaid text="
 quadrantChart
     title Feature Priority
     x-axis Low Effort --> High Effort
@@ -244,34 +244,33 @@ quadrantChart
     Dashboard: [0.7, 0.9]
     Analytics: [0.6, 0.5]
     Settings: [0.2, 0.3]
-'''/>
+"/>
 
 !! Block Diagram
 
-<$mermaid text='''
+<$mermaid text="""
 block-beta
     columns 3
     a["Client"] b["API Gateway"] c["Backend"]
     a --> b --> c
     d["Cache"]:1
     b --> d
-'''/>
+"""/>
 
 !! Architecture
 
-<$mermaid text='''
+<$mermaid text="
 architecture-beta
-    group cloud[Cloud]
-        service api(server)[API]
-        service db(database)[DB]
     service user(internet)[User]
+    service api(server)[API]
+    service db(database)[DB]
     user:R -- L:api
     api:B -- T:db
-'''/>
+"/>
 
 !! Kanban
 
-<$mermaid text='''
+<$mermaid text="
 kanban
     Todo
         task1[Write tests]
@@ -281,11 +280,11 @@ kanban
     Done
         task4[Upgrade Mermaid]
         task5[Add CI/CD]
-'''/>
+"/>
 
 !! Packet Diagram
 
-<$mermaid text='''
+<$mermaid text="""
 packet-beta
 title TCP Header
 0-15: "Source Port"
@@ -296,21 +295,18 @@ title TCP Header
 100-105: "Reserved"
 106-111: "Flags"
 112-127: "Window Size"
-'''/>
+"""/>
 
 !! ZenUML
 
-<$mermaid text='''
+<$mermaid text="
 zenuml
     title Order Flow
     @Actor User
     @Boundary UI
     @Control Service
-    @Database DB
-    User -> UI: submit order
-    UI -> Service: createOrder()
-    Service -> DB: save()
-    DB --> Service: id
-    Service --> UI: orderId
-    UI --> User: confirmation
-'''/>
+    User->UI: Submit order
+    UI->Service: createOrder()
+    Service->UI: orderId
+    UI->User: Confirmation
+"/>
