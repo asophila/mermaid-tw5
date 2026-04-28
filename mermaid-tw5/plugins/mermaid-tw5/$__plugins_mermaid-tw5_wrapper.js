@@ -82,13 +82,17 @@ modified: E Furlan 2022-05-08
             return;
         }
 
+        console.log('[mermaid-tw5] render() called, browser=' + $tw.browser + ', scriptBody length=' + (scriptBody ? scriptBody.length : 0));
+
         try {
             // Lazy-load mermaid and D3 on first render
             // Libraries are only loaded when a diagram is actually rendered
             if (!mermaidAPI) {
                 divNode.innerHTML = '<div style="border-left:3px solid #999;background:#f5f5f5;padding:8px 12px;">Loading diagram…</div>';
+                console.log('[mermaid-tw5] Loading mermaid.min.js...');
                 mermaidModule = require('$:/plugins/orange/mermaid-tw5/mermaid.min.js');
                 mermaidAPI = mermaidModule.mermaidAPI || mermaidModule;
+                console.log('[mermaid-tw5] mermaidAPI loaded, type=' + typeof mermaidAPI + ', has render=' + (mermaidAPI && typeof mermaidAPI.render === 'function'));
                 d3 = require('$:/plugins/orange/mermaid-tw5/d3.v6.min.js');
             }
 
@@ -127,10 +131,13 @@ modified: E Furlan 2022-05-08
             //END ZOOM LOGIC
 
             var renderDiagram = function() {
+                console.log('[mermaid-tw5] Calling render(' + divNode.id + ')...');
                 var result = mermaidAPI.render(divNode.id, scriptBody);
+                console.log('[mermaid-tw5] render() returned, type=' + typeof result + ', isPromise=' + (result && typeof result.then === 'function'));
                 // Mermaid 10+/11 returns a Promise; handle it explicitly
                 if (result && typeof result.then === 'function') {
                     result.then(function(res) {
+                        console.log('[mermaid-tw5] Promise resolved, keys=' + Object.keys(res || {}).join(','));
                         _insertSVG(res.svg, res.bindFunctions);
                     }).catch(function(renderErr) {
                         // If the Promise rejection says the diagram is async, try renderAsync
