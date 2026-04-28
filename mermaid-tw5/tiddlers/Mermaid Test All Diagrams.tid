@@ -183,7 +183,6 @@ mindmap
       flowchart
     Sequence
       sequenceDiagram
-      zenuml
     Architecture
       classDiagram
       erDiagram
@@ -252,8 +251,9 @@ quadrantChart
 block-beta
     columns 3
     a["Client"] b["API Gateway"] c["Backend"]
-    a --> b --> c
-    d["Cache"]:1
+    space d["Cache"] space
+    a --> b
+    b --> c
     b --> d
 """/>
 
@@ -297,16 +297,3 @@ title TCP Header
 112-127: "Window Size"
 """/>
 
-!! ZenUML
-
-<$mermaid text="
-zenuml
-    title Order Flow
-    @Actor User
-    @Boundary UI
-    @Control Service
-    User->UI: Submit order
-    UI->Service: createOrder()
-    Service->UI: orderId
-    UI->User: Confirmation
-"/>
