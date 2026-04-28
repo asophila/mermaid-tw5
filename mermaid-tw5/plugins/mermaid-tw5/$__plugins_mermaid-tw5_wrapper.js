@@ -10,8 +10,7 @@ modified: E Furlan 2022-05-08
     // global $tw: false
     'use strict';
 
-    var uniqueID = 1,
-        Rocklib = require('$:/plugins/orange/mermaid-tw5/widget-tools.js').rocklib,
+    var Rocklib = require('$:/plugins/orange/mermaid-tw5/widget-tools.js').rocklib,
         Widget = require('$:/core/modules/widgets/widget.js').widget,
         rocklib = new Rocklib(),
         mermaidModule = null,
@@ -61,13 +60,8 @@ modified: E Furlan 2022-05-08
         var tag = 'mermaid',
             scriptBody = rocklib.getScriptBody(this, 'text'),
             divNode = rocklib.getCanvas(this, tag);
-        console.log('[mermaid-tw5] divNode.id=' + divNode.id + ', tagName=' + divNode.tagName);
-            var _insertSVG = function(svgCode, bindFunctions) {
-                console.log('[mermaid-tw5] _insertSVG called, svgCode length=' + (svgCode ? svgCode.length : 0) + ', divNode.id=' + divNode.id);
+        var _insertSVG = function(svgCode, bindFunctions) {
                 divNode.innerHTML = svgCode;
-
-                // Add bind functions to support click events
-                // by fkmiec 2023-05-21
                 if (bindFunctions) {
                     try {
                         bindFunctions(divNode);
@@ -88,17 +82,13 @@ modified: E Furlan 2022-05-08
             return;
         }
 
-        console.log('[mermaid-tw5] render() called, browser=' + $tw.browser + ', scriptBody length=' + (scriptBody ? scriptBody.length : 0));
-
         try {
             // Lazy-load mermaid and D3 on first render
             // Libraries are only loaded when a diagram is actually rendered
             if (!mermaidAPI) {
                 divNode.innerHTML = '<div style="border-left:3px solid #999;background:#f5f5f5;padding:8px 12px;">Loading diagram…</div>';
-                console.log('[mermaid-tw5] Loading mermaid.min.js...');
                 mermaidModule = require('$:/plugins/orange/mermaid-tw5/mermaid.min.js');
                 mermaidAPI = mermaidModule.mermaidAPI || mermaidModule;
-                console.log('[mermaid-tw5] mermaidAPI loaded, type=' + typeof mermaidAPI + ', has render=' + (mermaidAPI && typeof mermaidAPI.render === 'function'));
                 d3 = require('$:/plugins/orange/mermaid-tw5/d3.v6.min.js');
             }
 
@@ -107,8 +97,6 @@ modified: E Furlan 2022-05-08
             };
             rocklib.getOptions(this, tag, options);
 
-            // Add securityLevel: 'loose' configuration to support click events
-            // by fkmiec 2023-05-21
             mermaidAPI.initialize({
                 startOnLoad: false,
                 flowchart: { useMaxWidth: true, htmlLabels: true },
@@ -137,16 +125,17 @@ modified: E Furlan 2022-05-08
             //END ZOOM LOGIC
 
             var renderDiagram = function() {
-                console.log('[mermaid-tw5] Calling render(' + divNode.id + ')...');
-                var result = mermaidAPI.render(divNode.id, scriptBody);
-                console.log('[mermaid-tw5] render() returned, type=' + typeof result + ', isPromise=' + (result && typeof result.then === 'function'));
+                // Mermaid 11 calls document.getElementById(id)?.remove() before rendering
+                // to clean up stale elements. We must NOT pass divNode.id as the SVG id,
+                // or Mermaid will silently remove divNode from the DOM before the async
+                // render completes, leaving the SVG set on a detached element.
+                var svgId = divNode.id + '_svg';
+                var result = mermaidAPI.render(svgId, scriptBody);
                 // Mermaid 10+/11 returns a Promise; handle it explicitly
                 if (result && typeof result.then === 'function') {
                     result.then(function(res) {
-                        console.log('[mermaid-tw5] Promise resolved, keys=' + Object.keys(res || {}).join(','));
                         _insertSVG(res.svg, res.bindFunctions);
                     }).catch(function(renderErr) {
-                        console.error('[mermaid-tw5] Promise rejected:', renderErr);
                         // If the Promise rejection says the diagram is async, try renderAsync
                         if (renderErr.message && renderErr.message.indexOf('Diagram is a promise') !== -1 && mermaidModule.renderAsync) {
                             mermaidModule.renderAsync(divNode.id, scriptBody, _insertSVG).catch(function(asyncEx) {
