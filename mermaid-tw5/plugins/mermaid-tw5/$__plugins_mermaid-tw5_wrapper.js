@@ -127,7 +127,7 @@ modified: E Furlan 2022-05-08
             //END ZOOM LOGIC
 
             var renderDiagram = function() {
-                var result = mermaidAPI.render(divNode.id, scriptBody, _insertSVG);
+                var result = mermaidAPI.render(divNode.id, scriptBody);
                 // Mermaid 10+/11 returns a Promise; handle it explicitly
                 if (result && typeof result.then === 'function') {
                     result.then(function(res) {

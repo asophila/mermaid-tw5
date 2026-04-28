@@ -62,13 +62,24 @@ MockWidget.prototype.setVariable = function(name, value) {
 
 var mockMermaidAPI = {
     initialize: function() {},
-    render: function(id, source, callback) {
+    render: function(id, source) {
         if (source && source.indexOf('INVALID_SYNTAX') !== -1) {
             var err = new Error('Syntax error in graph');
             err.name = 'MermaidParseError';
             throw err;
         }
-        callback('<svg id="' + id + '"><rect width="100" height="50"/></svg>', null);
+        // Return a thenable that resolves synchronously so tests don't need async/await
+        var result = {
+            svg: '<svg id="' + id + '"><rect width="100" height="50"/></svg>',
+            bindFunctions: null
+        };
+        return {
+            then: function(onFulfilled, onRejected) {
+                if (onFulfilled) onFulfilled(result);
+                return { catch: function() { return this; } };
+            },
+            catch: function() { return this; }
+        };
     }
 };
 
