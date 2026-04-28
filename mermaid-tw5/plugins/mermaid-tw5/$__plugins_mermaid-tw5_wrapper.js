@@ -60,14 +60,20 @@ modified: E Furlan 2022-05-08
         this.execute();
         var tag = 'mermaid',
             scriptBody = rocklib.getScriptBody(this, 'text'),
-            divNode = rocklib.getCanvas(this, tag),
-            _insertSVG = function(svgCode, bindFunctions) {
+            divNode = rocklib.getCanvas(this, tag);
+        console.log('[mermaid-tw5] divNode.id=' + divNode.id + ', tagName=' + divNode.tagName);
+            var _insertSVG = function(svgCode, bindFunctions) {
+                console.log('[mermaid-tw5] _insertSVG called, svgCode length=' + (svgCode ? svgCode.length : 0) + ', divNode.id=' + divNode.id);
                 divNode.innerHTML = svgCode;
 
                 // Add bind functions to support click events
                 // by fkmiec 2023-05-21
                 if (bindFunctions) {
-                    bindFunctions(divNode);
+                    try {
+                        bindFunctions(divNode);
+                    } catch (bfErr) {
+                        console.error('[mermaid-tw5] bindFunctions error:', bfErr);
+                    }
                 }
             };
 
@@ -140,6 +146,7 @@ modified: E Furlan 2022-05-08
                         console.log('[mermaid-tw5] Promise resolved, keys=' + Object.keys(res || {}).join(','));
                         _insertSVG(res.svg, res.bindFunctions);
                     }).catch(function(renderErr) {
+                        console.error('[mermaid-tw5] Promise rejected:', renderErr);
                         // If the Promise rejection says the diagram is async, try renderAsync
                         if (renderErr.message && renderErr.message.indexOf('Diagram is a promise') !== -1 && mermaidModule.renderAsync) {
                             mermaidModule.renderAsync(divNode.id, scriptBody, _insertSVG).catch(function(asyncEx) {
