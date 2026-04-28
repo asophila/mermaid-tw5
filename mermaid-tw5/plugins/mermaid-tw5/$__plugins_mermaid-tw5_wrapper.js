@@ -10,24 +10,42 @@ modified: E Furlan 2022-05-08
     // global $tw: false
     'use strict';
 
-    var uniqueID = 1,
-        Rocklib = require("$:/plugins/orange/mermaid-tw5/widget-tools.js").rocklib,
-        Widget = require("$:/core/modules/widgets/widget.js").widget,
+    var Rocklib = require('$:/plugins/orange/mermaid-tw5/widget-tools.js').rocklib,
+        Widget = require('$:/core/modules/widgets/widget.js').widget,
         rocklib = new Rocklib(),
-        mermaidAPI = require("$:/plugins/orange/mermaid-tw5/mermaid.min.js")
-        .mermaidAPI;
-
-        // Add D3 library to support pan and zoom
-        // by fkmiec 2023-05-21
-        var d3 = require("$:/plugins/orange/mermaid-tw5/d3.v6.min.js");
+        mermaidModule = null,
+        mermaidAPI = null,
+        d3 = null;
 
     function escapeHtml(text) {
-        if (text === null || text === undefined) { return ''; }
+        if (text === null || text === undefined) {
+            return '';
+        }
         return String(text)
             .replace(/&/g, '&amp;')
             .replace(/</g, '&lt;')
             .replace(/>/g, '&gt;')
             .replace(/"/g, '&quot;');
+    }
+
+    function getSimpleStack(ex) {
+        if (!ex || !ex.stack) {
+            return '';
+        }
+        var lines = String(ex.stack).split('\n');
+        var frames = [];
+        for (var i = 0; i < lines.length && frames.length < 3; i++) {
+            var line = lines[i].trim();
+            if (line.indexOf('at ') === 0) {
+                var match = line.match(/at\s+(?:[^\s(]+\s+\()?([^)]+)\)?/);
+                if (match) {
+                    var loc = match[1];
+                    var fileName = loc.split('/').pop().split(':')[0];
+                    frames.push(fileName);
+                }
+            }
+        }
+        return frames.join('\n');
     }
 
     var MermaidWidget = function(parseTreeNode, options) {
@@ -39,14 +57,11 @@ modified: E Furlan 2022-05-08
         this.parentDomNode = parent;
         this.computeAttributes();
         this.execute();
-        var tag = "mermaid",
-            scriptBody = rocklib.getScriptBody(this, "text"),
-            divNode = rocklib.getCanvas(this, tag),
-            _insertSVG = function(svgCode, bindFunctions) {
+        var tag = 'mermaid',
+            scriptBody = rocklib.getScriptBody(this, 'text'),
+            divNode = rocklib.getCanvas(this, tag);
+        var _insertSVG = function(svgCode, bindFunctions) {
                 divNode.innerHTML = svgCode;
-
-                // Add bind functions to support click events
-                // by fkmiec 2023-05-21
                 if (bindFunctions) {
                     try {
                         bindFunctions(divNode);
@@ -55,14 +70,33 @@ modified: E Furlan 2022-05-08
                     }
                 }
             };
+
+        // Skip rendering during static HTML generation (Node.js build).
+        // Mermaid 11 requires a browser DOM (document) to render diagrams.
+        if (!$tw.browser) {
+            divNode.innerHTML = '<div style="border-left:3px solid #2196F3;background:#e3f2fd;padding:8px 12px;">' +
+                '<strong>Mermaid diagram</strong> (interactive rendering requires a browser)' +
+                '</div>';
+            parent.insertBefore(divNode, nextSibling);
+            this.domNodes.push(divNode);
+            return;
+        }
+
         try {
+            // Lazy-load mermaid and D3 on first render
+            // Libraries are only loaded when a diagram is actually rendered
+            if (!mermaidAPI) {
+                divNode.innerHTML = '<div style="border-left:3px solid #999;background:#f5f5f5;padding:8px 12px;">Loading diagram…</div>';
+                mermaidModule = require('$:/plugins/orange/mermaid-tw5/mermaid.min.js');
+                mermaidAPI = mermaidModule.mermaidAPI || mermaidModule;
+                d3 = require('$:/plugins/orange/mermaid-tw5/d3.v6.min.js');
+            }
+
             var options = {
-                theme: ""
+                theme: ''
             };
             rocklib.getOptions(this, tag, options);
 
-            // Add securityLevel: 'loose' configuration to support click events
-            // by fkmiec 2023-05-21
             mermaidAPI.initialize({
                 startOnLoad: false,
                 flowchart: { useMaxWidth: true, htmlLabels: true },
@@ -74,37 +108,91 @@ modified: E Furlan 2022-05-08
             var isZoomEnabled = false;
 
             divNode.addEventListener('click', function() {
-                if (!zoomEventListenersApplied) {
+                if(!zoomEventListenersApplied) {
                     var id = Date.now().toString(36);
-                    this.firstChild.setAttribute("id", id);
-                    var svg = d3.select("#" + id);
-                    svg.html("<g>" + svg.html() + "</g>");
-                    var inner = svg.select("g");
-                    var zoom = d3.zoom().filter(function() { return isZoomEnabled; }).on("zoom", function(event) {
-                        inner.attr("transform", event.transform);
+                    this.firstChild.setAttribute('id', id);
+                    var svg = d3.select('#' + id);
+                    svg.html('<g>' + svg.html() + '</g>');
+                    var inner = svg.select('g');
+                    var zoom = d3.zoom().filter(function() { return isZoomEnabled; }).on('zoom', function(event) {
+                        inner.attr('transform', event.transform);
                     });
                     svg.call(zoom);
                     zoomEventListenersApplied = true;
                 }
-                isZoomEnabled = !isZoomEnabled;
+                isZoomEnabled ? isZoomEnabled = false : isZoomEnabled = true;
             });
             //END ZOOM LOGIC
 
-            mermaidAPI.render(divNode.id, scriptBody, _insertSVG);
+            var renderDiagram = function() {
+                // Mermaid 11 calls document.getElementById(id)?.remove() before rendering
+                // to clean up stale elements. We must NOT pass divNode.id as the SVG id,
+                // or Mermaid will silently remove divNode from the DOM before the async
+                // render completes, leaving the SVG set on a detached element.
+                var svgId = divNode.id + '_svg';
+                var result = mermaidAPI.render(svgId, scriptBody);
+                // Mermaid 10+/11 returns a Promise; handle it explicitly
+                if (result && typeof result.then === 'function') {
+                    result.then(function(res) {
+                        _insertSVG(res.svg, res.bindFunctions);
+                    }).catch(function(renderErr) {
+                        // If the Promise rejection says the diagram is async, try renderAsync
+                        if (renderErr.message && renderErr.message.indexOf('Diagram is a promise') !== -1 && mermaidModule.renderAsync) {
+                            mermaidModule.renderAsync(divNode.id, scriptBody, _insertSVG).catch(function(asyncEx) {
+                                var errorHtml = '<div style="border-left:3px solid #ff4444;background:#fff0f0;padding:8px 12px;">' +
+                                    '<p><strong>Mermaid diagram could not be rendered.</strong> The diagram syntax may contain an error.</p>' +
+                                    '<pre style="margin:8px 0;padding:6px;background:#ffffff;border:1px solid #ffcccc;overflow:auto;">' +
+                                    escapeHtml(scriptBody) +
+                                    '</pre>' +
+                                    '<details>' +
+                                    '<summary style="cursor:pointer;color:#666;font-size:12px;">Technical details</summary>' +
+                                    '<p style="margin:8px 0 0 0;font-size:12px;"><strong>' + escapeHtml(asyncEx.name || 'Error') + ':</strong> ' +
+                                    escapeHtml(asyncEx.message || String(asyncEx)) + '</p>' +
+                                    '<pre style="margin:4px 0 0 0;font-size:11px;overflow:auto;">' + escapeHtml(getSimpleStack(asyncEx)) + '</pre>' +
+                                    '</details>' +
+                                    '</div>';
+                                divNode.innerHTML = errorHtml;
+                            });
+                        } else {
+                            var errorHtml = '<div style="border-left:3px solid #ff4444;background:#fff0f0;padding:8px 12px;">' +
+                                '<p><strong>Mermaid diagram could not be rendered.</strong> The diagram syntax may contain an error.</p>' +
+                                '<pre style="margin:8px 0;padding:6px;background:#ffffff;border:1px solid #ffcccc;overflow:auto;">' +
+                                escapeHtml(scriptBody) +
+                                '</pre>' +
+                                '<details>' +
+                                '<summary style="cursor:pointer;color:#666;font-size:12px;">Technical details</summary>' +
+                                '<p style="margin:8px 0 0 0;font-size:12px;"><strong>' + escapeHtml(renderErr.name || 'Error') + ':</strong> ' +
+                                escapeHtml(renderErr.message || String(renderErr)) + '</p>' +
+                                '<pre style="margin:4px 0 0 0;font-size:11px;overflow:auto;">' + escapeHtml(getSimpleStack(renderErr)) + '</pre>' +
+                                '</details>' +
+                                '</div>';
+                            divNode.innerHTML = errorHtml;
+                        }
+                    });
+                }
+            };
+
+            try {
+                renderDiagram();
+            } catch (ex) {
+                // Synchronous error from Mermaid 9 or unhandled sync errors
+                throw ex;
+            }
 
         } catch (ex) {
-            divNode.innerHTML =
-                '<div style="border-left:3px solid #ff4444;background:#fff0f0;padding:8px 12px;">' +
+            var errorHtml = '<div style="border-left:3px solid #ff4444;background:#fff0f0;padding:8px 12px;">' +
                 '<p><strong>Mermaid diagram could not be rendered.</strong> The diagram syntax may contain an error.</p>' +
                 '<pre style="margin:8px 0;padding:6px;background:#ffffff;border:1px solid #ffcccc;overflow:auto;">' +
                 escapeHtml(scriptBody) +
                 '</pre>' +
                 '<details>' +
                 '<summary style="cursor:pointer;color:#666;font-size:12px;">Technical details</summary>' +
-                '<p style="margin:4px 0;font-size:12px;"><strong>' + escapeHtml(ex.name || 'Error') + ':</strong> ' +
+                '<p style="margin:8px 0 0 0;font-size:12px;"><strong>' + escapeHtml(ex.name || 'Error') + ':</strong> ' +
                 escapeHtml(ex.message || String(ex)) + '</p>' +
+                '<pre style="margin:4px 0 0 0;font-size:11px;overflow:auto;">' + escapeHtml(getSimpleStack(ex)) + '</pre>' +
                 '</details>' +
                 '</div>';
+            divNode.innerHTML = errorHtml;
         }
         parent.insertBefore(divNode, nextSibling);
         this.domNodes.push(divNode);

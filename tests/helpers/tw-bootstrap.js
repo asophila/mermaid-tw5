@@ -8,6 +8,7 @@ var vm = require('vm');
 // ---------------------------------------------------------------------------
 
 global.$tw = {
+    browser: true,
     wiki: {
         getTiddler: function() { return null; },
         tiddlerExists: function() { return false; },
@@ -57,21 +58,37 @@ MockWidget.prototype.setVariable = function(name, value) {
 };
 
 // ---------------------------------------------------------------------------
-// Mermaid API mock — Mermaid 9 callback style: render(id, src, callback)
+// Mermaid API mock — Mermaid 11 Promise style: render(id, src) → Promise
+// Thenable resolves/rejects synchronously so tests need no async handling.
 // ---------------------------------------------------------------------------
 
 var mockMermaidAPI = {
     initialize: function() {},
-    render: function(id, source, callback) {
+    render: function(id, source) {
         if (source && source.indexOf('INVALID_SYNTAX') !== -1) {
             var err = new Error('Syntax error in graph');
             err.name = 'MermaidParseError';
-            throw err;
+            return {
+                then: function() {
+                    return {
+                        catch: function(onRejected) {
+                            if (onRejected) { onRejected(err); }
+                            return this;
+                        }
+                    };
+                }
+            };
         }
-        var svg = '<svg id="' + id + '"><rect width="100" height="50"/></svg>';
-        if (callback) {
-            callback(svg, null);
-        }
+        var result = {
+            svg: '<svg id="' + id + '"><rect width="100" height="50"/></svg>',
+            bindFunctions: null
+        };
+        return {
+            then: function(onFulfilled) {
+                if (onFulfilled) { onFulfilled(result); }
+                return { catch: function() { return this; } };
+            }
+        };
     }
 };
 
@@ -97,22 +114,24 @@ var mockD3 = {
 };
 
 // ---------------------------------------------------------------------------
-// TW-style module loader
+// TW-style module loader with require-call tracking
 // ---------------------------------------------------------------------------
 
 var moduleCache = {};
+var requireCalls = [];
 
 var pathMap = {
-    '$:/plugins/orange/mermaid-tw5/widget-tools.js':  'mermaid-tw5/plugins/mermaid-tw5/$__plugins_mermaid-tw5_widget-tools.js',
+    '$:/plugins/orange/mermaid-tw5/widget-tools.js': 'mermaid-tw5/plugins/mermaid-tw5/$__plugins_mermaid-tw5_widget-tools.js',
     '$:/plugins/orange/mermaid-tw5/typed-parser.js':  'mermaid-tw5/plugins/mermaid-tw5/$__plugins_mermaid-tw5_typed-parser.js',
     '$:/plugins/orange/mermaid-tw5/wrapper.js':        'mermaid-tw5/plugins/mermaid-tw5/$__plugins_mermaid-tw5_wrapper.js'
 };
 
 function twRequire(moduleName) {
+    requireCalls.push(moduleName);
+
     if (moduleCache[moduleName]) {
         return moduleCache[moduleName];
     }
-
     if (moduleName === '$:/core/modules/widgets/widget.js') {
         return { widget: MockWidget };
     }
@@ -130,7 +149,6 @@ function twRequire(moduleName) {
 
     var exports = {};
     var code = fs.readFileSync(localPath, 'utf8');
-
     var context = vm.createContext({
         exports: exports,
         require: twRequire,
@@ -154,6 +172,14 @@ function loadModule(moduleName) {
     return twRequire(moduleName);
 }
 
+function getRequireCalls() {
+    return requireCalls.slice();
+}
+
+function clearRequireCalls() {
+    requireCalls.length = 0;
+}
+
 function clearModuleCache(moduleName) {
     if (moduleName) {
         delete moduleCache[moduleName];
@@ -167,5 +193,7 @@ module.exports = {
     twRequire: twRequire,
     MockWidget: MockWidget,
     mockMermaidAPI: mockMermaidAPI,
+    getRequireCalls: getRequireCalls,
+    clearRequireCalls: clearRequireCalls,
     clearModuleCache: clearModuleCache
 };
