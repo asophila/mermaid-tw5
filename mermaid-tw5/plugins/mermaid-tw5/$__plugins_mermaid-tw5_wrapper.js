@@ -127,33 +127,53 @@ modified: E Furlan 2022-05-08
             //END ZOOM LOGIC
 
             var renderDiagram = function() {
-                mermaidAPI.render(divNode.id, scriptBody, _insertSVG);
+                var result = mermaidAPI.render(divNode.id, scriptBody, _insertSVG);
+                // Mermaid 10+/11 returns a Promise; handle it explicitly
+                if (result && typeof result.then === 'function') {
+                    result.then(function(res) {
+                        _insertSVG(res.svg, res.bindFunctions);
+                    }).catch(function(renderErr) {
+                        // If the Promise rejection says the diagram is async, try renderAsync
+                        if (renderErr.message && renderErr.message.indexOf('Diagram is a promise') !== -1 && mermaidModule.renderAsync) {
+                            mermaidModule.renderAsync(divNode.id, scriptBody, _insertSVG).catch(function(asyncEx) {
+                                var errorHtml = '<div style="border-left:3px solid #ff4444;background:#fff0f0;padding:8px 12px;">' +
+                                    '<p><strong>Mermaid diagram could not be rendered.</strong> The diagram syntax may contain an error.</p>' +
+                                    '<pre style="margin:8px 0;padding:6px;background:#ffffff;border:1px solid #ffcccc;overflow:auto;">' +
+                                    escapeHtml(scriptBody) +
+                                    '</pre>' +
+                                    '<details>' +
+                                    '<summary style="cursor:pointer;color:#666;font-size:12px;">Technical details</summary>' +
+                                    '<p style="margin:8px 0 0 0;font-size:12px;"><strong>' + escapeHtml(asyncEx.name || 'Error') + ':</strong> ' +
+                                    escapeHtml(asyncEx.message || String(asyncEx)) + '</p>' +
+                                    '<pre style="margin:4px 0 0 0;font-size:11px;overflow:auto;">' + escapeHtml(getSimpleStack(asyncEx)) + '</pre>' +
+                                    '</details>' +
+                                    '</div>';
+                                divNode.innerHTML = errorHtml;
+                            });
+                        } else {
+                            var errorHtml = '<div style="border-left:3px solid #ff4444;background:#fff0f0;padding:8px 12px;">' +
+                                '<p><strong>Mermaid diagram could not be rendered.</strong> The diagram syntax may contain an error.</p>' +
+                                '<pre style="margin:8px 0;padding:6px;background:#ffffff;border:1px solid #ffcccc;overflow:auto;">' +
+                                escapeHtml(scriptBody) +
+                                '</pre>' +
+                                '<details>' +
+                                '<summary style="cursor:pointer;color:#666;font-size:12px;">Technical details</summary>' +
+                                '<p style="margin:8px 0 0 0;font-size:12px;"><strong>' + escapeHtml(renderErr.name || 'Error') + ':</strong> ' +
+                                escapeHtml(renderErr.message || String(renderErr)) + '</p>' +
+                                '<pre style="margin:4px 0 0 0;font-size:11px;overflow:auto;">' + escapeHtml(getSimpleStack(renderErr)) + '</pre>' +
+                                '</details>' +
+                                '</div>';
+                            divNode.innerHTML = errorHtml;
+                        }
+                    });
+                }
             };
 
             try {
                 renderDiagram();
             } catch (ex) {
-                // Mermaid 11+ async diagram types (mindmap, timeline, etc.)
-                // require renderAsync instead of sync render
-                if (ex.message && ex.message.indexOf('Diagram is a promise') !== -1 && mermaidModule.renderAsync) {
-                    mermaidModule.renderAsync(divNode.id, scriptBody, _insertSVG).catch(function(asyncEx) {
-                        var errorHtml = '<div style="border-left:3px solid #ff4444;background:#fff0f0;padding:8px 12px;">' +
-                            '<p><strong>Mermaid diagram could not be rendered.</strong> The diagram syntax may contain an error.</p>' +
-                            '<pre style="margin:8px 0;padding:6px;background:#ffffff;border:1px solid #ffcccc;overflow:auto;">' +
-                            escapeHtml(scriptBody) +
-                            '</pre>' +
-                            '<details>' +
-                            '<summary style="cursor:pointer;color:#666;font-size:12px;">Technical details</summary>' +
-                            '<p style="margin:8px 0 0 0;font-size:12px;"><strong>' + escapeHtml(asyncEx.name || 'Error') + ':</strong> ' +
-                            escapeHtml(asyncEx.message || String(asyncEx)) + '</p>' +
-                            '<pre style="margin:4px 0 0 0;font-size:11px;overflow:auto;">' + escapeHtml(getSimpleStack(asyncEx)) + '</pre>' +
-                            '</details>' +
-                            '</div>';
-                        divNode.innerHTML = errorHtml;
-                    });
-                } else {
-                    throw ex;
-                }
+                // Synchronous error from Mermaid 9 or unhandled sync errors
+                throw ex;
             }
 
         } catch (ex) {
