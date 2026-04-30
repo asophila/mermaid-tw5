@@ -1,0 +1,103 @@
+created: 20260430000000000
+modified: 20260430000000000
+title: Kanban Board
+type: text/vnd.tiddlywiki
+
+A kanban board represents work items flowing through status columns. Use it to document sprint state, visualize a workflow, or show task assignments. ''New in Mermaid 11.'' Uses the `kanban` keyword.
+
+---
+
+!! Basic example
+
+```
+kanban
+  todo[To Do]
+    t1[Write unit tests]
+    t2[Update changelog]
+    t3[Review open PRs]
+  doing[In Progress]
+    t4[Implement search]
+    t5[Fix login bug]
+  done[Done]
+    t6[Set up CI]
+    t7[Deploy v1.0]
+```
+
+$$$text/vnd.tiddlywiki.mermaid
+kanban
+  todo[To Do]
+    t1[Write unit tests]
+    t2[Update changelog]
+    t3[Review open PRs]
+  doing[In Progress]
+    t4[Implement search]
+    t5[Fix login bug]
+  done[Done]
+    t6[Set up CI]
+    t7[Deploy v1.0]
+$$$
+
+---
+
+!! Real-world example: Sprint board with metadata
+
+```
+kanban
+  backlog[Backlog]
+    b1[Dark mode support]
+    b2[CSV export]
+    b3[API rate limiting]
+  todo[Sprint — To Do]
+    t1[OAuth2 integration]@{ assigned: 'alice' }
+    t2[Password reset flow]@{ assigned: 'bob' }
+  doing[In Progress]
+    t3[Refactor auth middleware]@{ assigned: 'alice', ticket: GH-112 }
+    t4[Write API docs]@{ assigned: 'carol' }
+  review[Review]
+    t5[Add dark mode toggle]@{ assigned: 'bob', ticket: GH-98 }
+  done[Done]
+    t6[Set up staging env]
+    t7[Database migrations]
+```
+
+$$$text/vnd.tiddlywiki.mermaid
+kanban
+  backlog[Backlog]
+    b1[Dark mode support]
+    b2[CSV export]
+    b3[API rate limiting]
+  todo[Sprint — To Do]
+    t1[OAuth2 integration]@{ assigned: 'alice' }
+    t2[Password reset flow]@{ assigned: 'bob' }
+  doing[In Progress]
+    t3[Refactor auth middleware]@{ assigned: 'alice', ticket: GH-112 }
+    t4[Write API docs]@{ assigned: 'carol' }
+  review[Review]
+    t5[Add dark mode toggle]@{ assigned: 'bob', ticket: GH-98 }
+  done[Done]
+    t6[Set up staging env]
+    t7[Database migrations]
+$$$
+
+---
+
+!! Syntax
+
+```
+kanban
+  columnId[Column Title]
+    itemId[Item label]
+    itemId[Item label]@{ assigned: 'user', ticket: REF-1, priority: 'High' }
+```
+
+* Each column is declared as `columnId[Title]`.
+* Items are indented under their column.
+* Metadata is appended with `@{ key: 'value', ... }` — supported keys: `assigned`, `ticket`, `priority`.
+
+!! Tips
+
+* Column and item IDs must be unique within the diagram and contain no spaces.
+* Kanban is a ''read-only snapshot'' — it does not support drag-and-drop interaction.
+* The number of columns is unlimited, but wide boards may overflow on small screens.
+
+[[← Mermaid Chart Catalog]]

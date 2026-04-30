@@ -1,0 +1,80 @@
+created: 20260430000000000
+modified: 20260430000000000
+title: Choosing the Right Diagram
+type: text/vnd.tiddlywiki
+
+Not sure which diagram type to use? This flowchart walks you through the decision. Then check the [[Mermaid Chart Catalog]] for the full list with examples.
+
+$$$text/vnd.tiddlywiki.mermaid
+flowchart TD
+    Start([What do you want to show?]) --> Q1{Connections\nbetween things?}
+
+    Q1 -->|Yes| Q2{Sequence\nmatters?}
+    Q1 -->|No| Q3{Over time?}
+
+    Q2 -->|Yes, steps in order| Q4{Who talks\nto whom?}
+    Q2 -->|No, just structure| Q5{Type of structure?}
+
+    Q4 -->|Actors exchanging messages| Seq[["sequenceDiagram 1\nSequence Diagram"]]
+    Q4 -->|Steps a user takes| UJ[["User Journey Diagram\nUser Journey"]]
+    Q4 -->|A process or algorithm| FC[[Flowchart]]
+
+    Q5 -->|Classes and inheritance| CD[["Class diagrams\nClass Diagram"]]
+    Q5 -->|Database tables| ER[["Defining Relationship\nEntity Relationship"]]
+    Q5 -->|States and transitions| SD[["stateDiagram 1\nState Diagram"]]
+    Q5 -->|Requirements| RD[[Requirement Diagram]]
+    Q5 -->|System architecture| Arch{Scale?}
+
+    Arch -->|Service topology| AD[[Architecture Diagram]]
+    Arch -->|Component layout| BD[[Block Diagram]]
+    Arch -->|System context C4| C4[[C4 Diagram]]
+
+    Q3 -->|Yes| Q6{What kind?}
+    Q3 -->|No| Q7{Proportions?}
+
+    Q6 -->|Events on a timeline| TL[[Timeline]]
+    Q6 -->|Task scheduling| GN[["Gantt 1\nGantt Chart"]]
+    Q6 -->|Git history| GG[["Gitgraph Diagram 1\nGit Graph"]]
+    Q6 -->|Work status| KB[[Kanban Board]]
+
+    Q7 -->|Yes, parts of a whole| Q8{Flow between parts?}
+    Q7 -->|No| Q9{Two axes?}
+
+    Q8 -->|Yes, flow| SK[[Sankey Diagram]]
+    Q8 -->|No, just proportions| PC[["Pie chart diagrams\nPie Chart"]]
+
+    Q9 -->|Numeric bar/line chart| XY[[XY Chart]]
+    Q9 -->|2x2 positioning matrix| QC[[Quadrant Chart]]
+    Q9 -->|No| Q10{Hierarchy?}
+
+    Q10 -->|Yes| MM[[Mindmap]]
+    Q10 -->|Protocol / binary format| PKT[[Packet Diagram]]
+$$$
+
+---
+
+!! Quick reference
+
+|!I want to show...|!Use|
+|A step-by-step process|[[Flowchart]]|
+|Messages between actors|[[sequenceDiagram 1]]|
+|A user's experience|[[User Journey Diagram]]|
+|Class relationships in OOP|[[Class diagrams]]|
+|Database schema|[[Defining Relationship]]|
+|A state machine|[[stateDiagram 1]]|
+|Project schedule|[[Gantt 1]]|
+|Git branch history|[[Gitgraph Diagram 1]]|
+|System architecture (C4)|[[C4 Diagram]]|
+|Cloud infrastructure|[[Architecture Diagram]]|
+|Component layout|[[Block Diagram]]|
+|Proportional data|[[Pie chart diagrams]]|
+|Flow between categories|[[Sankey Diagram]]|
+|Bar or line chart|[[XY Chart]]|
+|High/low × high/low matrix|[[Quadrant Chart]]|
+|Brainstorming map|[[Mindmap]]|
+|Events over time|[[Timeline]]|
+|Task workflow|[[Kanban Board]]|
+|Network packet format|[[Packet Diagram]]|
+|Requirements traceability|[[Requirement Diagram]]|
+
+[[← Mermaid Chart Catalog]]

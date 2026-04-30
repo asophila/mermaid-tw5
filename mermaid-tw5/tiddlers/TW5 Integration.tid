@@ -1,0 +1,90 @@
+created: 20260430000000000
+modified: 20260430000000000
+title: TW5 Integration
+type: text/vnd.tiddlywiki
+
+This page shows patterns specific to using Mermaid inside TiddlyWiki — transclusion, shared diagrams, and avoiding common pitfalls.
+
+---
+
+!! Pattern 1: Reusing a diagram across tiddlers
+
+Create a tiddler with its type set to `text/vnd.tiddlywiki.mermaid` and write only the diagram syntax as its body. Then transclude it anywhere:
+
+''In the diagram tiddler'' (type = `text/vnd.tiddlywiki.mermaid`):
+
+```
+flowchart TD
+    Requirements --> Design --> Code --> Test --> Deploy
+```
+
+''In any other tiddler:''
+
+```
+{{My Diagram Tiddler}}
+```
+
+The diagram renders wherever it is transcluded. Changing the source tiddler updates all transclusions automatically.
+
+See it in action: [[Graph Simple Transclusion]]
+
+---
+
+!! Pattern 2: The block delimiter syntax
+
+For diagrams embedded inline, the `$$$` syntax avoids the attribute quoting issues of the `<$mermaid>` widget:
+
+```
+$$$text/vnd.tiddlywiki.mermaid
+sequenceDiagram
+    Alice->>Bob: Hello
+    Bob-->>Alice: Hi!
+$$$
+```
+
+$$$text/vnd.tiddlywiki.mermaid
+sequenceDiagram
+    Alice->>Bob: Hello
+    Bob-->>Alice: Hi!
+$$$
+
+Use this syntax when the diagram contains single quotes, double quotes, or spans many lines. See [[About $$$ usage]] for more detail.
+
+---
+
+!! Pattern 3: Widget attribute quoting rules
+
+The `<$mermaid text='...'>` attribute uses single quotes. This means ''single quotes inside the diagram will break it.'' Use double quotes for node labels inside single-quoted attributes:
+
+```
+<$mermaid text='
+flowchart LR
+    A["Node A"] --> B["Node B"]
+'></$mermaid>
+```
+
+If the diagram needs both single and double quotes, use the `$$$` block syntax instead.
+
+---
+
+!! Pattern 4: Hiding from search
+
+Diagram-only tiddlers (type `text/vnd.tiddlywiki.mermaid`) appear in search results. To hide them, add the tag `$:/tags/Hidden` or filter them out in your search configuration.
+
+---
+
+!! Pattern 5: Adding a diagram type to the editor
+
+TiddlyWiki's editor type selector does not list `text/vnd.tiddlywiki.mermaid` by default. See [[Add new type to TiddlyWiki editor]] for how to add it to the dropdown.
+
+---
+
+!! Known issues
+
+* ''Timestamp conflicts:'' if timestamps are enabled, TiddlyWiki may overwrite tiddlers on open. Disable timestamps in `$:/config/TimestampDisable` or use `$:/config/DefaultTiddlerNewLineHandling`.
+* ''WikiText in diagrams:'' do not use WikiText markup inside diagram code — it will be parsed before Mermaid sees it. Keep diagram content plain.
+* ''Large diagrams:'' very large or deeply nested diagrams may render slowly on first load due to Mermaid's async engine. This is a known Mermaid limitation.
+
+See also [[Issues]] for plugin-specific known problems.
+
+[[← Mermaid Chart Catalog]]

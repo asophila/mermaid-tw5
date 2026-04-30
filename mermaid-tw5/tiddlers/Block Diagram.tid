@@ -1,0 +1,98 @@
+created: 20260430000000000
+modified: 20260430000000000
+title: Block Diagram
+type: text/vnd.tiddlywiki
+
+A block diagram arranges nodes on an explicit grid with arrows between them. Unlike flowcharts (which auto-layout), block diagrams give you direct control over column placement. Use it for component architecture, data pipelines, and structured system overviews. ''New in Mermaid 11.''
+
+---
+
+!! Basic example
+
+```
+block-beta
+    columns 3
+    Browser["Browser"] API["API Server"] DB[("Database")]
+    Browser --> API --> DB
+```
+
+$$$text/vnd.tiddlywiki.mermaid
+block-beta
+    columns 3
+    Browser["Browser"] API["API Server"] DB[("Database")]
+    Browser --> API --> DB
+$$$
+
+---
+
+!! Real-world example: Web application stack
+
+```
+block-beta
+    columns 3
+    Client["Web Client\nReact"] space LB["Load Balancer\nnginx"]
+    space space space
+    API1["API Server 1"] API2["API Server 2"] Cache[("Redis\nCache")]
+    space space space
+    space DB[("PostgreSQL")] space
+
+    Client --> LB
+    LB --> API1
+    LB --> API2
+    API1 --> Cache
+    API2 --> Cache
+    API1 --> DB
+    API2 --> DB
+```
+
+$$$text/vnd.tiddlywiki.mermaid
+block-beta
+    columns 3
+    Client["Web Client\nReact"] space LB["Load Balancer\nnginx"]
+    space space space
+    API1["API Server 1"] API2["API Server 2"] Cache[("Redis\nCache")]
+    space space space
+    space DB[("PostgreSQL")] space
+
+    Client --> LB
+    LB --> API1
+    LB --> API2
+    API1 --> Cache
+    API2 --> Cache
+    API1 --> DB
+    API2 --> DB
+$$$
+
+---
+
+!! Node shapes
+
+|!Syntax|!Shape|
+|`id["label"]`|Rectangle|
+|`id(("label"))`|Circle|
+|`id[("label")]`|Cylinder / database|
+|`id{{"label"}}`|Hexagon|
+|`space`|Empty cell (for layout control)|
+
+!! Syntax
+
+```
+block-beta
+    columns 3
+    A["Node A"] B["Node B"] C["Node C"]
+    A --> B
+    B --> C
+```
+
+* `columns N` sets the grid width.
+* Nodes are placed left-to-right, row-by-row.
+* `space` occupies a cell without drawing anything — useful for alignment.
+* Arrows are declared after all node definitions.
+
+!! Tips
+
+* Use `\n` inside labels to force line breaks.
+* `block-beta` is still beta — complex layouts may require trial and error.
+* For auto-layout without grid control, prefer [[Flowchart]].
+
+[[← Mermaid Chart Catalog]]

@@ -1,0 +1,104 @@
+created: 20260430000000000
+modified: 20260430000000000
+title: Packet Diagram
+type: text/vnd.tiddlywiki
+
+A packet diagram renders binary frame layouts at the bit level — the kind of diagram you see in RFC documents for TCP, UDP, IP, and other protocol specifications. Use it when documenting network protocols, hardware registers, or any fixed-width binary format. ''New in Mermaid 11.'' Uses `packet-beta`.
+
+---
+
+!! Basic example
+
+```
+packet-beta
+    0-7: "Version"
+    8-15: "IHL"
+    16-31: "Total Length"
+    32-63: "Source IP"
+    64-95: "Destination IP"
+    96+: "Data"
+```
+
+$$$text/vnd.tiddlywiki.mermaid
+packet-beta
+    0-7: "Version"
+    8-15: "IHL"
+    16-31: "Total Length"
+    32-63: "Source IP"
+    64-95: "Destination IP"
+    96+: "Data"
+$$$
+
+---
+
+!! Real-world example: TCP segment
+
+```
+packet-beta
+    title TCP Segment
+    0-15: "Source Port"
+    16-31: "Destination Port"
+    32-63: "Sequence Number"
+    64-95: "Acknowledgment Number"
+    96-99: "Data Offset"
+    100-105: "Reserved"
+    106: "URG"
+    107: "ACK"
+    108: "PSH"
+    109: "RST"
+    110: "SYN"
+    111: "FIN"
+    112-127: "Window Size"
+    128-143: "Checksum"
+    144-159: "Urgent Pointer"
+    160-191: "Options"
+    192+: "Data (variable)"
+```
+
+$$$text/vnd.tiddlywiki.mermaid
+packet-beta
+    title TCP Segment
+    0-15: "Source Port"
+    16-31: "Destination Port"
+    32-63: "Sequence Number"
+    64-95: "Acknowledgment Number"
+    96-99: "Data Offset"
+    100-105: "Reserved"
+    106: "URG"
+    107: "ACK"
+    108: "PSH"
+    109: "RST"
+    110: "SYN"
+    111: "FIN"
+    112-127: "Window Size"
+    128-143: "Checksum"
+    144-159: "Urgent Pointer"
+    160-191: "Options"
+    192+: "Data (variable)"
+$$$
+
+---
+
+!! Syntax
+
+```
+packet-beta
+    title Optional title
+    0-7: "Field name"
+    8-15: "Another field"
+    16+: "Variable-length field"
+```
+
+* Each line defines a bit field: `start-end: "Label"` or `start+: "Label"` for open-ended fields.
+* Bit numbering starts at 0.
+* Fields are rendered left-to-right, wrapping to the next row when the line width is exceeded.
+* The default line width is 32 bits (matches most protocol diagrams).
+
+!! Tips
+
+* Single-bit fields (like TCP flags) use a single number: `106: "SYN"`.
+* `+` suffix means "remaining bits" — use it only for the last field.
+* `title` is optional but helps when embedding multiple packet diagrams on one page.
+* This diagram type has a niche audience but is very effective for technical documentation.
+
+[[← Mermaid Chart Catalog]]

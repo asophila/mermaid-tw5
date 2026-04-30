@@ -1,0 +1,77 @@
+created: 20260430000000000
+modified: 20260430000000000
+title: Sankey Diagram
+type: text/vnd.tiddlywiki
+
+A Sankey diagram shows flows between nodes, where the width of each band is proportional to the quantity it represents. Use it for budget allocation, energy flow, traffic routing, or any "how is X distributed?" question. ''New in Mermaid 10.3.''
+
+---
+
+!! Basic example
+
+```
+sankey-beta
+Income,Housing,1500
+Income,Food,600
+Income,Transport,400
+Income,Savings,500
+Income,Other,200
+```
+
+$$$text/vnd.tiddlywiki.mermaid
+sankey-beta
+Income,Housing,1500
+Income,Food,600
+Income,Transport,400
+Income,Savings,500
+Income,Other,200
+$$$
+
+---
+
+!! Real-world example: Budget allocation
+
+```
+sankey-beta
+Revenue,Cost of Goods,4000
+Revenue,Gross Profit,6000
+Gross Profit,R&D,1500
+Gross Profit,Sales,1200
+Gross Profit,Operations,1300
+Gross Profit,Net Income,2000
+```
+
+$$$text/vnd.tiddlywiki.mermaid
+sankey-beta
+Revenue,Cost of Goods,4000
+Revenue,Gross Profit,6000
+Gross Profit,R&D,1500
+Gross Profit,Sales,1200
+Gross Profit,Operations,1300
+Gross Profit,Net Income,2000
+$$$
+
+---
+
+!! Syntax
+
+Each line inside `sankey-beta` is a CSV row:
+
+```
+sankey-beta
+source,target,value
+source,target,value
+```
+
+* `source` and `target` are node labels (free text).
+* `value` is a positive number representing the flow magnitude.
+* The same node label can appear as both source and target across different rows, creating chains.
+
+!! Tips
+
+* Values are relative — only the ratios between flows matter for visual proportions.
+* Node labels with commas must be quoted: `"Node, A",Target,100`
+* Cycles are not supported (a node cannot flow back to one of its ancestors).
+* Flows do not need to balance — source totals and target totals can differ.
+
+[[← Mermaid Chart Catalog]]

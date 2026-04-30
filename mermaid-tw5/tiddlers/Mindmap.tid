@@ -1,0 +1,109 @@
+created: 20260430000000000
+modified: 20260430000000000
+title: Mindmap
+type: text/vnd.tiddlywiki
+
+A mindmap radiates outward from a single root. Use it for brainstorming, topic decomposition, and hierarchical thinking. ''New in Mermaid 9.4.''
+
+---
+
+!! Basic example
+
+```
+mindmap
+  root((Mindmap))
+    Origins
+      Tony Buzan
+      Ancient concept
+    Uses
+      Brainstorming
+      Note-taking
+      Planning
+    Tools
+      Paper
+      Software
+```
+
+$$$text/vnd.tiddlywiki.mermaid
+mindmap
+  root((Mindmap))
+    Origins
+      Tony Buzan
+      Ancient concept
+    Uses
+      Brainstorming
+      Note-taking
+      Planning
+    Tools
+      Paper
+      Software
+$$$
+
+---
+
+!! Real-world example: Software project map
+
+```
+mindmap
+  root((Project))
+    Frontend
+      React
+      CSS
+      Accessibility
+    Backend
+      REST API
+      Auth
+      Database
+        PostgreSQL
+        Redis
+    DevOps
+      CI/CD
+      Docker
+      Monitoring
+    Docs
+      README
+      API Reference
+      Changelog
+```
+
+$$$text/vnd.tiddlywiki.mermaid
+mindmap
+  root((Project))
+    Frontend
+      React
+      CSS
+      Accessibility
+    Backend
+      REST API
+      Auth
+      Database
+        PostgreSQL
+        Redis
+    DevOps
+      CI/CD
+      Docker
+      Monitoring
+    Docs
+      README
+      API Reference
+      Changelog
+$$$
+
+---
+
+!! Node shapes
+
+|!Syntax|!Shape|
+|`root((text))`|Circle — conventional for root|
+|`node[text]`|Square / rectangle|
+|`node(text)`|Rounded rectangle|
+|`node)text(`|Cloud shape|
+
+!! Tips
+
+* Indentation defines the hierarchy. Each level of indent becomes a child of the line above it.
+* There is exactly one root node per diagram.
+* Mindmaps do not support clickable links or events.
+* Keep labels short — overlapping text is a known layout limitation.
+
+[[← Mermaid Chart Catalog]]

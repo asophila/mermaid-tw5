@@ -1,0 +1,73 @@
+created: 20260430000000000
+modified: 20260430000000000
+title: Theme Showcase
+type: text/vnd.tiddlywiki
+
+Mermaid supports five built-in themes. The same diagram is shown below in each theme for comparison. Pass the theme via the `theme` attribute on the `<$mermaid>` widget.
+
+```
+<$mermaid theme="forest" text='
+flowchart LR
+    A --> B --> C
+'></$mermaid>
+```
+
+---
+
+!! default
+
+<$mermaid theme="default" text='
+flowchart LR
+    User["User"] --> Auth["Auth Service"]
+    Auth --> DB[("Database")]
+    Auth --> Cache[("Cache")]
+    Auth -->|fail| Error["Error Handler"]
+'></$mermaid>
+
+!! base
+
+<$mermaid theme="base" text='
+flowchart LR
+    User["User"] --> Auth["Auth Service"]
+    Auth --> DB[("Database")]
+    Auth --> Cache[("Cache")]
+    Auth -->|fail| Error["Error Handler"]
+'></$mermaid>
+
+!! forest
+
+<$mermaid theme="forest" text='
+flowchart LR
+    User["User"] --> Auth["Auth Service"]
+    Auth --> DB[("Database")]
+    Auth --> Cache[("Cache")]
+    Auth -->|fail| Error["Error Handler"]
+'></$mermaid>
+
+!! dark
+
+<$mermaid theme="dark" text='
+flowchart LR
+    User["User"] --> Auth["Auth Service"]
+    Auth --> DB[("Database")]
+    Auth --> Cache[("Cache")]
+    Auth -->|fail| Error["Error Handler"]
+'></$mermaid>
+
+!! neutral
+
+<$mermaid theme="neutral" text='
+flowchart LR
+    User["User"] --> Auth["Auth Service"]
+    Auth --> DB[("Database")]
+    Auth --> Cache[("Cache")]
+    Auth -->|fail| Error["Error Handler"]
+'></$mermaid>
+
+---
+
+!! Git graph themes
+
+Git graphs have their own per-diagram theme support and additional theme customization. See [[Gitgraph Base Theme]], [[Gitgraph Dark Theme]], [[Gitgraph Forest Theme]], [[Gitgraph Neutral Theme]], and [[Gitgraph Default Theme]] for examples.
+
+[[← Mermaid Chart Catalog]]

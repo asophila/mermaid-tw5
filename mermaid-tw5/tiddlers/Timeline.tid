@@ -1,0 +1,111 @@
+created: 20260430000000000
+modified: 20260430000000000
+title: Timeline
+type: text/vnd.tiddlywiki
+
+A timeline places events on a chronological axis. Use it for version history, project milestones, and historical context. ''New in Mermaid 9.4.''
+
+---
+
+!! Basic example
+
+```
+timeline
+    title Plugin Version History
+    2021 : v0.3.2 — Mermaid 8.x
+    2022 : v0.3.7 — Mermaid 9.3
+    2024 : v0.3.8 — TiddlyWiki 5.3.3
+    2026 : v0.4.0 — Mermaid 11.14.0
+```
+
+$$$text/vnd.tiddlywiki.mermaid
+timeline
+    title Plugin Version History
+    2021 : v0.3.2 — Mermaid 8.x
+    2022 : v0.3.7 — Mermaid 9.3
+    2024 : v0.3.8 — TiddlyWiki 5.3.3
+    2026 : v0.4.0 — Mermaid 11.14.0
+$$$
+
+---
+
+!! Real-world example: Mermaid diagram types over time
+
+```
+timeline
+    title Mermaid Diagram Types
+    section 2014 – 2020
+        Flowchart : 2014
+        Sequence Diagram : 2014
+        Class Diagram : 2018
+        State Diagram : 2018
+        ER Diagram : 2019
+        Gantt : 2019
+        Git Graph : 2020
+    section 2021 – 2022
+        Pie Chart : 2021
+        User Journey : 2021
+        C4 Diagram : 2021
+        Mindmap : 2022
+        Timeline : 2022
+    section 2023 – 2024
+        Sankey : 2023
+        Quadrant : 2023
+        XY Chart : 2023
+        Architecture : 2024
+        Kanban : 2024
+        Block Diagram : 2024
+        Packet : 2024
+```
+
+$$$text/vnd.tiddlywiki.mermaid
+timeline
+    title Mermaid Diagram Types
+    section 2014 – 2020
+        Flowchart : 2014
+        Sequence Diagram : 2014
+        Class Diagram : 2018
+        State Diagram : 2018
+        ER Diagram : 2019
+        Gantt : 2019
+        Git Graph : 2020
+    section 2021 – 2022
+        Pie Chart : 2021
+        User Journey : 2021
+        C4 Diagram : 2021
+        Mindmap : 2022
+        Timeline : 2022
+    section 2023 – 2024
+        Sankey : 2023
+        Quadrant : 2023
+        XY Chart : 2023
+        Architecture : 2024
+        Kanban : 2024
+        Block Diagram : 2024
+        Packet : 2024
+$$$
+
+---
+
+!! Syntax
+
+```
+timeline
+    title My Timeline
+    2020 : Event A
+         : Event B (same period, second entry)
+    section Next Phase
+        2021 : Event C
+```
+
+* ''Period labels'' are free text — use years, quarters, sprint names, version numbers.
+* ''Multiple events'' per period: indent additional `: event` lines under the same period.
+* ''Sections'' group periods with a visual header. They are optional.
+
+!! Tips
+
+* Long event text wraps automatically.
+* The `–` dash in period ranges is a display choice — the label is just text, not parsed.
+* Sections help readability for timelines spanning many years.
+
+[[← Mermaid Chart Catalog]]
