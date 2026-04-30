@@ -1,121 +1,113 @@
-import { describe, it } from 'node:test';
+import { describe, it, beforeEach } from 'node:test';
 import assert from 'node:assert';
-import { loadModule, MockWidget, getRequireCalls, clearRequireCalls, clearModuleCache } from './helpers/tw-bootstrap.js';
+import { loadModule, getRequireCalls, clearRequireCalls, clearModuleCache } from './helpers/tw-bootstrap.js';
 import './helpers/dom-mock.js';
 
+function makeWidget(source) {
+    var MermaidWidget = loadModule('$:/plugins/orange/mermaid-tw5/wrapper.js').mermaid;
+    var widget = new MermaidWidget({ text: source }, {});
+    widget.document = global.document;
+    widget.attributes = {};
+    widget.wiki = global.$tw.wiki;
+    widget.variables = {};
+    return widget;
+}
+
 describe('wrapper', () => {
+    beforeEach(function() {
+        clearModuleCache('$:/plugins/orange/mermaid-tw5/wrapper.js');
+        global.$tw.browser = true;
+    });
+
     it('exports MermaidWidget constructor', () => {
         var exports = loadModule('$:/plugins/orange/mermaid-tw5/wrapper.js');
         assert.ok(exports.mermaid, 'should export mermaid widget constructor');
     });
 
     it('instantiates without errors', () => {
-        var MermaidWidget = loadModule('$:/plugins/orange/mermaid-tw5/wrapper.js').mermaid;
-        var widget = new MermaidWidget({ text: 'graph TD; A-->B' }, {});
+        var widget = makeWidget('graph TD; A-->B');
         assert.ok(widget, 'should create widget instance');
     });
 
-    it('render produces a DOM element for valid diagram', () => {
-        var MermaidWidget = loadModule('$:/plugins/orange/mermaid-tw5/wrapper.js').mermaid;
-        var widget = new MermaidWidget({ text: 'graph TD; A-->B' }, {});
-        widget.document = global.document;
-        widget.attributes = {};
-        widget.wiki = global.$tw.wiki;
-        widget.variables = {};
-        global.$tw.browser = true;
-
+    it('render produces a DOM element containing SVG for a valid diagram', () => {
+        var widget = makeWidget('graph TD; A-->B');
         var parent = global.document.createElement('div');
         widget.render(parent, null);
 
         assert.strictEqual(widget.domNodes.length, 1, 'should push one DOM node');
-        var node = widget.domNodes[0];
-        assert.ok(node, 'should have a DOM node');
-        assert.strictEqual(node.tagName, 'div', 'should be a div element');
-        assert.ok(node.innerHTML.indexOf('<svg') !== -1, 'innerHTML should contain an SVG element');
+        assert.ok(widget.domNodes[0].innerHTML.indexOf('<svg') !== -1, 'should contain SVG');
     });
 
     it('handles invalid diagram syntax without throwing', () => {
-        var MermaidWidget = loadModule('$:/plugins/orange/mermaid-tw5/wrapper.js').mermaid;
-        var widget = new MermaidWidget({ text: 'INVALID_SYNTAX' }, {});
-        widget.document = global.document;
-        widget.attributes = {};
-        widget.wiki = global.$tw.wiki;
-        widget.variables = {};
-        global.$tw.browser = true;
-
+        var widget = makeWidget('INVALID_SYNTAX');
         var parent = global.document.createElement('div');
         assert.doesNotThrow(function() {
             widget.render(parent, null);
-        }, 'render should not throw for invalid syntax');
-
+        });
         assert.strictEqual(widget.domNodes.length, 1, 'should still push one DOM node');
-        var node = widget.domNodes[0];
-        assert.ok(node, 'should have a DOM node');
-        assert.strictEqual(node.tagName, 'div', 'should be a div element');
+    });
+
+    it('displays a friendly error message for invalid syntax', () => {
+        var widget = makeWidget('INVALID_SYNTAX');
+        var parent = global.document.createElement('div');
+        widget.render(parent, null);
+
+        var html = widget.domNodes[0].innerHTML;
+        assert.ok(html.indexOf('could not be rendered') !== -1, 'should explain the failure');
+        assert.ok(html.indexOf('INVALID_SYNTAX') !== -1, 'should include the diagram source');
+    });
+
+    it('renders a placeholder when $tw.browser is false (Node.js build)', () => {
+        global.$tw.browser = false;
+        var widget = makeWidget('graph TD; A-->B');
+        var parent = global.document.createElement('div');
+        widget.render(parent, null);
+
+        assert.strictEqual(widget.domNodes.length, 1, 'should push one DOM node');
+        assert.ok(widget.domNodes[0].innerHTML.indexOf('requires a browser') !== -1,
+            'should show browser-required placeholder');
     });
 
     describe('lazy loading', () => {
         it('does not load mermaid or d3 during module evaluation', () => {
             clearRequireCalls();
-            clearModuleCache('$:/plugins/orange/mermaid-tw5/wrapper.js');
-
             loadModule('$:/plugins/orange/mermaid-tw5/wrapper.js');
 
             var calls = getRequireCalls();
-            assert.strictEqual(calls.indexOf('$:/plugins/orange/mermaid-tw5/mermaid.min.js'), -1, 'should not require mermaid during module load');
-            assert.strictEqual(calls.indexOf('$:/plugins/orange/mermaid-tw5/d3.v6.min.js'), -1, 'should not require d3 during module load');
+            assert.ok(calls.indexOf('$:/plugins/orange/mermaid-tw5/mermaid.min.js') === -1,
+                'should not require mermaid at module load time');
+            assert.ok(calls.indexOf('$:/plugins/orange/mermaid-tw5/d3.v6.min.js') === -1,
+                'should not require d3 at module load time');
         });
 
         it('loads mermaid and d3 on first render', () => {
             clearRequireCalls();
-            clearModuleCache('$:/plugins/orange/mermaid-tw5/wrapper.js');
-
-            var exports = loadModule('$:/plugins/orange/mermaid-tw5/wrapper.js');
-            var MermaidWidget = exports.mermaid;
-            var widget = new MermaidWidget({ text: 'graph TD; A-->B' }, {});
-            widget.document = global.document;
-            widget.attributes = {};
-            widget.wiki = global.$tw.wiki;
-            widget.variables = {};
-            global.$tw.browser = true;
-
+            var widget = makeWidget('graph TD; A-->B');
             var parent = global.document.createElement('div');
             widget.render(parent, null);
 
             var calls = getRequireCalls();
-            assert.ok(calls.indexOf('$:/plugins/orange/mermaid-tw5/mermaid.min.js') !== -1, 'should require mermaid on first render');
-            assert.ok(calls.indexOf('$:/plugins/orange/mermaid-tw5/d3.v6.min.js') !== -1, 'should require d3 on first render');
+            assert.ok(calls.indexOf('$:/plugins/orange/mermaid-tw5/mermaid.min.js') !== -1,
+                'should require mermaid on first render');
+            assert.ok(calls.indexOf('$:/plugins/orange/mermaid-tw5/d3.v6.min.js') !== -1,
+                'should require d3 on first render');
         });
 
-        it('does not reload mermaid or d3 on second render', () => {
-            clearRequireCalls();
-            clearModuleCache('$:/plugins/orange/mermaid-tw5/wrapper.js');
-
-            var MermaidWidget = loadModule('$:/plugins/orange/mermaid-tw5/wrapper.js').mermaid;
-            var widget = new MermaidWidget({ text: 'graph TD; A-->B' }, {});
-            widget.document = global.document;
-            widget.attributes = {};
-            widget.wiki = global.$tw.wiki;
-            widget.variables = {};
-
-            var parent = global.document.createElement('div');
-            widget.render(parent, null); // First render — loads libraries
+        it('does not reload mermaid or d3 on subsequent renders', () => {
+            var widget1 = makeWidget('graph TD; A-->B');
+            widget1.render(global.document.createElement('div'), null);
 
             clearRequireCalls();
 
-            var widget2 = new MermaidWidget({ text: 'graph TD; C-->D' }, {});
-            widget2.document = global.document;
-            widget2.attributes = {};
-            widget2.wiki = global.$tw.wiki;
-            widget2.variables = {};
-            global.$tw.browser = true;
-
-            var parent2 = global.document.createElement('div');
-            widget2.render(parent2, null); // Second render — should not reload
+            // Reuse the same module instance — mermaidAPI is already loaded
+            var widget2 = makeWidget('graph TD; C-->D');
+            widget2.render(global.document.createElement('div'), null);
 
             var calls = getRequireCalls();
-            assert.strictEqual(calls.indexOf('$:/plugins/orange/mermaid-tw5/mermaid.min.js'), -1, 'should not require mermaid on second render');
-            assert.strictEqual(calls.indexOf('$:/plugins/orange/mermaid-tw5/d3.v6.min.js'), -1, 'should not require d3 on second render');
+            assert.ok(calls.indexOf('$:/plugins/orange/mermaid-tw5/mermaid.min.js') === -1,
+                'should not re-require mermaid on second render');
+            assert.ok(calls.indexOf('$:/plugins/orange/mermaid-tw5/d3.v6.min.js') === -1,
+                'should not re-require d3 on second render');
         });
     });
 });

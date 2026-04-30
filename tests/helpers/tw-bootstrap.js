@@ -8,13 +8,14 @@ var vm = require('vm');
 // ---------------------------------------------------------------------------
 
 global.$tw = {
+    browser: true,
     wiki: {
-        getTiddler: function(title) { return null; },
-        tiddlerExists: function(title) { return false; },
-        getTiddlerData: function(title) { return {}; }
+        getTiddler: function() { return null; },
+        tiddlerExists: function() { return false; },
+        getTiddlerData: function() { return {}; }
     },
     modules: {
-        execute: function(moduleName, moduleRoot) { return {}; }
+        execute: function() { return {}; }
     },
     utils: {
         parseStringArray: function() { return []; }
@@ -57,7 +58,8 @@ MockWidget.prototype.setVariable = function(name, value) {
 };
 
 // ---------------------------------------------------------------------------
-// Mermaid API mock
+// Mermaid API mock — Mermaid 11 Promise style: render(id, src) → Promise
+// Thenable resolves/rejects synchronously so tests need no async handling.
 // ---------------------------------------------------------------------------
 
 var mockMermaidAPI = {
@@ -66,19 +68,26 @@ var mockMermaidAPI = {
         if (source && source.indexOf('INVALID_SYNTAX') !== -1) {
             var err = new Error('Syntax error in graph');
             err.name = 'MermaidParseError';
-            throw err;
+            return {
+                then: function() {
+                    return {
+                        catch: function(onRejected) {
+                            if (onRejected) { onRejected(err); }
+                            return this;
+                        }
+                    };
+                }
+            };
         }
-        // Return a thenable that resolves synchronously so tests don't need async/await
         var result = {
             svg: '<svg id="' + id + '"><rect width="100" height="50"/></svg>',
             bindFunctions: null
         };
         return {
-            then: function(onFulfilled, onRejected) {
-                if (onFulfilled) onFulfilled(result);
+            then: function(onFulfilled) {
+                if (onFulfilled) { onFulfilled(result); }
                 return { catch: function() { return this; } };
-            },
-            catch: function() { return this; }
+            }
         };
     }
 };
@@ -105,7 +114,7 @@ var mockD3 = {
 };
 
 // ---------------------------------------------------------------------------
-// TW-style module loader
+// TW-style module loader with require-call tracking
 // ---------------------------------------------------------------------------
 
 var moduleCache = {};
@@ -113,16 +122,16 @@ var requireCalls = [];
 
 var pathMap = {
     '$:/plugins/orange/mermaid-tw5/widget-tools.js': 'mermaid-tw5/plugins/mermaid-tw5/$__plugins_mermaid-tw5_widget-tools.js',
-    '$:/plugins/orange/mermaid-tw5/typed-parser.js': 'mermaid-tw5/plugins/mermaid-tw5/$__plugins_mermaid-tw5_typed-parser.js',
-    '$:/plugins/orange/mermaid-tw5/wrapper.js': 'mermaid-tw5/plugins/mermaid-tw5/$__plugins_mermaid-tw5_wrapper.js'
+    '$:/plugins/orange/mermaid-tw5/typed-parser.js':  'mermaid-tw5/plugins/mermaid-tw5/$__plugins_mermaid-tw5_typed-parser.js',
+    '$:/plugins/orange/mermaid-tw5/wrapper.js':        'mermaid-tw5/plugins/mermaid-tw5/$__plugins_mermaid-tw5_wrapper.js'
 };
 
 function twRequire(moduleName) {
     requireCalls.push(moduleName);
+
     if (moduleCache[moduleName]) {
         return moduleCache[moduleName];
     }
-
     if (moduleName === '$:/core/modules/widgets/widget.js') {
         return { widget: MockWidget };
     }
@@ -140,34 +149,21 @@ function twRequire(moduleName) {
 
     var exports = {};
     var code = fs.readFileSync(localPath, 'utf8');
-
     var context = vm.createContext({
         exports: exports,
         require: twRequire,
         $tw: global.$tw,
         document: global.document,
         console: console,
-        Array: Array,
-        Object: Object,
-        String: String,
-        Number: Number,
-        Boolean: Boolean,
-        Date: Date,
-        Math: Math,
-        JSON: JSON,
-        Error: Error,
-        RegExp: RegExp,
-        parseInt: parseInt,
-        parseFloat: parseFloat,
-        isNaN: isNaN,
-        isFinite: isFinite,
-        undefined: undefined,
-        Infinity: Infinity,
-        NaN: NaN
+        Array: Array, Object: Object, String: String, Number: Number,
+        Boolean: Boolean, Date: Date, Math: Math, JSON: JSON,
+        Error: Error, RegExp: RegExp,
+        parseInt: parseInt, parseFloat: parseFloat,
+        isNaN: isNaN, isFinite: isFinite,
+        undefined: undefined, Infinity: Infinity, NaN: NaN
     });
 
     vm.runInContext(code, context);
-
     moduleCache[moduleName] = exports;
     return exports;
 }
@@ -188,9 +184,7 @@ function clearModuleCache(moduleName) {
     if (moduleName) {
         delete moduleCache[moduleName];
     } else {
-        for (var key in moduleCache) {
-            delete moduleCache[key];
-        }
+        Object.keys(moduleCache).forEach(function(k) { delete moduleCache[k]; });
     }
 }
 

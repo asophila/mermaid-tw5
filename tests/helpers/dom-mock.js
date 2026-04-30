@@ -34,7 +34,7 @@ MockElement.prototype.removeEventListener = function(event, handler) {
     }
 };
 
-MockElement.prototype.insertBefore = function(newNode, referenceNode) {
+MockElement.prototype.insertBefore = function(newNode) {
     this.children.push(newNode);
 };
 

@@ -6,20 +6,18 @@ Thank you for your interest in improving the mermaid-tw5 plugin!
 
 1. Fork the repository
 2. Clone your fork
-3. Run tests to ensure everything is working:
+3. Run tests to make sure everything is working:
    ```bash
    node --test
    ```
 
 ## Coding Standards
 
-We follow the conventions documented in the codebase. Key points:
-
 - **Indentation:** 4 spaces (no tabs)
-- **Quotes:** Single quotes for strings
+- **Quotes:** Single quotes for strings (double quotes are used in some older files — new code should use single)
 - **Semicolons:** Use them consistently
-- **Variable declarations:** Prefer `let` for new code; `var` is acceptable for consistency within existing functions
-- **No debug logging:** Do not leave `console.log` or `console.error` in production code
+- **Variable declarations:** `var` for compatibility with older TW5 environments
+- **No debug logging:** Do not leave `console.log` statements in production code
 - **Strict mode:** All modules begin with `'use strict';`
 
 ## Pull Request Process
@@ -30,20 +28,12 @@ We follow the conventions documented in the codebase. Key points:
 2. Make your changes
 3. Run tests locally: `node --test`
 4. Ensure your code follows the coding standards above
-5. Open a pull request to `main` with:
-   - A clear description of what changed and why
-   - Confirmation that tests pass
-   - Note if the change affects the demo site (may need a rebuild)
-
-## What to Expect
-
-- Automated tests will run on your PR via GitHub Actions
-- The demo site is rebuilt and deployed automatically when PRs are merged to `main`
-- Reviews focus on correctness, consistency with existing patterns, and test coverage
+5. Open a pull request to `main` with a clear description of what changed and why
 
 ## Reporting Issues
 
 When reporting bugs, please include:
+
 - TiddlyWiki version
 - Browser and version (if applicable)
 - Steps to reproduce
