@@ -1,12 +1,12 @@
 # mermaid-tw5
 
-*Last edited: 2024-03-18*
+*Last edited: 2026-04-30*
 
 The mermaid-tw5 plugin is a wrapper for Mermaid (<https://mermaid.js.org>).
 
-TiddlyWiki notebook including the plugin: <http://efurlanm.github.io/mermaid-tw5> . You can install the plugin by navigating to the site and dragging the plugin link to your TiddlyWiki.
+TiddlyWiki notebook including the plugin: <https://asophila.github.io/mermaid-tw5> . You can install the plugin by navigating to the site and dragging the plugin link to your TiddlyWiki.
 
-I'm not the author of the plugin, I just got what I was already ready, and updated the mermaid.min.js to the version 11.14.0. All credits are from the original authors:
+This is a fork of the original plugin, now maintained at <https://github.com/asophila/mermaid-tw5>, updated to Mermaid 11.14.0 with async rendering and lazy loading. All credits are from the original authors:
 
 * <http://github.com/gt6796c/mermaid-tw5>
 * <http://github.com/jasonmhoule/tw5-mermaid>
