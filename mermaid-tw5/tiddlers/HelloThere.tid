@@ -40,6 +40,10 @@ This is a personal fork of [[efurlanm/mermaid-tw5|https://github.com/efurlanm/me
 
 The plugin adds ~3.4&nbsp;MB to the empty TiddlyWiki 5.3.3 file (2.4&nbsp;MB): 3.1&nbsp;MB for Mermaid 11.14.0 and 0.26&nbsp;MB for D3.js v6. Both libraries are lazy-loaded — a tiddler with no diagrams pays no cost on render.
 
+!! Install
+
+Drag and drop [[this plugin|https://asophila.github.io/mermaid-tw5/#%24%3A%2Fplugins%2Forange%2Fmermaid-tw5]] into your TiddlyWiki to import.
+
 !! How to use
 
 ''Widget syntax'' — inline anywhere in a tiddler:
