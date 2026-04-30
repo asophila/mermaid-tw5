@@ -28,6 +28,13 @@ modified: E Furlan 2022-05-08
             .replace(/"/g, '&quot;');
     }
 
+    function decodeHtmlEntities(text) {
+        if (!text) return text;
+        var el = document.createElement('textarea');
+        el.innerHTML = text;
+        return el.value;
+    }
+
     function getSimpleStack(ex) {
         if (!ex || !ex.stack) {
             return '';
@@ -123,6 +130,8 @@ modified: E Furlan 2022-05-08
                 isZoomEnabled ? isZoomEnabled = false : isZoomEnabled = true;
             });
             //END ZOOM LOGIC
+
+            scriptBody = decodeHtmlEntities(scriptBody);
 
             var renderDiagram = function() {
                 // Mermaid 11 calls document.getElementById(id)?.remove() before rendering
